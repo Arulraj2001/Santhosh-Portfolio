@@ -149,39 +149,60 @@ ALTER TABLE education ENABLE ROW LEVEL SECURITY;
 ALTER TABLE skills ENABLE ROW LEVEL SECURITY;
 ALTER TABLE inquiries ENABLE ROW LEVEL SECURITY;
 
--- Public Read Policies
-CREATE POLICY "Public Read Settings" ON site_settings FOR SELECT USING (true);
-CREATE POLICY "Public Read Profile" ON profile FOR SELECT USING (true);
-CREATE POLICY "Public Read Metrics" ON metrics FOR SELECT USING (true);
-CREATE POLICY "Public Read Clients" ON clients FOR SELECT USING (true);
-CREATE POLICY "Public Read Projects" ON projects FOR SELECT USING (true);
-CREATE POLICY "Public Read Process" ON work_process FOR SELECT USING (true);
-CREATE POLICY "Public Read Experiences" ON experiences FOR SELECT USING (true);
-CREATE POLICY "Public Read Education" ON education FOR SELECT USING (true);
-CREATE POLICY "Public Read Skills" ON skills FOR SELECT USING (true);
+-- Allow full read/write operations (access controlled by Admin Dashboard PIN '2101')
+DROP POLICY IF EXISTS "Public Read Settings" ON site_settings;
+DROP POLICY IF EXISTS "Admin Full Access Settings" ON site_settings;
+CREATE POLICY "Allow All Access Settings" ON site_settings FOR ALL USING (true) WITH CHECK (true);
 
--- Public Insert for Inquiries
-CREATE POLICY "Public Submit Inquiries" ON inquiries FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "Public Read Profile" ON profile;
+DROP POLICY IF EXISTS "Admin Full Access Profile" ON profile;
+CREATE POLICY "Allow All Access Profile" ON profile FOR ALL USING (true) WITH CHECK (true);
 
--- Authenticated Full Access for Admin
-CREATE POLICY "Admin Full Access Settings" ON site_settings FOR ALL USING (auth.role() = 'authenticated');
-CREATE POLICY "Admin Full Access Profile" ON profile FOR ALL USING (auth.role() = 'authenticated');
-CREATE POLICY "Admin Full Access Metrics" ON metrics FOR ALL USING (auth.role() = 'authenticated');
-CREATE POLICY "Admin Full Access Clients" ON clients FOR ALL USING (auth.role() = 'authenticated');
-CREATE POLICY "Admin Full Access Projects" ON projects FOR ALL USING (auth.role() = 'authenticated');
-CREATE POLICY "Admin Full Access Process" ON work_process FOR ALL USING (auth.role() = 'authenticated');
-CREATE POLICY "Admin Full Access Experiences" ON experiences FOR ALL USING (auth.role() = 'authenticated');
-CREATE POLICY "Admin Full Access Education" ON education FOR ALL USING (auth.role() = 'authenticated');
-CREATE POLICY "Admin Full Access Skills" ON skills FOR ALL USING (auth.role() = 'authenticated');
-CREATE POLICY "Admin Full Access Inquiries" ON inquiries FOR ALL USING (auth.role() = 'authenticated');
+DROP POLICY IF EXISTS "Public Read Metrics" ON metrics;
+DROP POLICY IF EXISTS "Admin Full Access Metrics" ON metrics;
+CREATE POLICY "Allow All Access Metrics" ON metrics FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public Read Clients" ON clients;
+DROP POLICY IF EXISTS "Admin Full Access Clients" ON clients;
+CREATE POLICY "Allow All Access Clients" ON clients FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public Read Projects" ON projects;
+DROP POLICY IF EXISTS "Admin Full Access Projects" ON projects;
+CREATE POLICY "Allow All Access Projects" ON projects FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public Read Process" ON work_process;
+DROP POLICY IF EXISTS "Admin Full Access Process" ON work_process;
+CREATE POLICY "Allow All Access Process" ON work_process FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public Read Experiences" ON experiences;
+DROP POLICY IF EXISTS "Admin Full Access Experiences" ON experiences;
+CREATE POLICY "Allow All Access Experiences" ON experiences FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public Read Education" ON education;
+DROP POLICY IF EXISTS "Admin Full Access Education" ON education;
+CREATE POLICY "Allow All Access Education" ON education FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public Read Skills" ON skills;
+DROP POLICY IF EXISTS "Admin Full Access Skills" ON skills;
+CREATE POLICY "Allow All Access Skills" ON skills FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public Submit Inquiries" ON inquiries;
+DROP POLICY IF EXISTS "Admin Full Access Inquiries" ON inquiries;
+CREATE POLICY "Allow All Access Inquiries" ON inquiries FOR ALL USING (true) WITH CHECK (true);
 
 -- Storage Bucket Setup for Images & Resumes
 INSERT INTO storage.buckets (id, name, public) 
 VALUES ('portfolio-assets', 'portfolio-assets', true)
 ON CONFLICT (id) DO NOTHING;
 
--- Storage Policies
+-- Storage Policies (Upload, Update, Read, Delete)
+DROP POLICY IF EXISTS "Public Read Portfolio Assets" ON storage.objects;
+DROP POLICY IF EXISTS "Public Upload Portfolio Assets" ON storage.objects;
+DROP POLICY IF EXISTS "Public Update Portfolio Assets" ON storage.objects;
+DROP POLICY IF EXISTS "Public Delete Portfolio Assets" ON storage.objects;
+
 CREATE POLICY "Public Read Portfolio Assets" ON storage.objects FOR SELECT USING (bucket_id = 'portfolio-assets');
 CREATE POLICY "Public Upload Portfolio Assets" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'portfolio-assets');
 CREATE POLICY "Public Update Portfolio Assets" ON storage.objects FOR UPDATE USING (bucket_id = 'portfolio-assets');
+CREATE POLICY "Public Delete Portfolio Assets" ON storage.objects FOR DELETE USING (bucket_id = 'portfolio-assets');
 
