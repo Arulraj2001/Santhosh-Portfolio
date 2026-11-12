@@ -9,8 +9,9 @@ export function ClientsMarquee() {
   const [viewMode, setViewMode] = useState<'marquee' | 'grid'>('marquee');
 
   // Split clients into two rows for the dual marquee
-  const row1 = clients.slice(0, 10);
-  const row2 = clients.slice(10, 20);
+  const half = Math.ceil(clients.length / 2);
+  const row1 = clients.slice(0, half);
+  const row2 = clients.slice(half);
 
   return (
     <section id="clients" className="py-20 relative overflow-hidden border-y border-[#27272A]/80 bg-[#0C0C0F]">
@@ -28,7 +29,7 @@ export function ClientsMarquee() {
               <span>Proven Brand Portfolio</span>
             </div>
             <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white uppercase">
-              20 Brands Managed & Scaled
+              {clients.length}+ Brands Managed & Scaled
             </h2>
             <p className="text-sm text-[#A1A1AA] mt-2 max-w-xl">
               From hospitality and luxury dining to FMCG, healthcare, and corporate enterprises across South India.
@@ -63,23 +64,26 @@ export function ClientsMarquee() {
       </div>
 
       {viewMode === 'marquee' ? (
-        <div className="space-y-6">
+        <div className="space-y-8">
           {/* Row 1: Leftward Scrolling */}
-          <div className="relative overflow-hidden whitespace-nowrap py-2 [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]">
-            <div className="animate-marquee flex items-center gap-5">
+          <div className="relative overflow-hidden whitespace-nowrap py-3 [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]">
+            <div className="animate-marquee flex items-center gap-6">
               {[...row1, ...row1, ...row1].map((client, idx) => (
                 <div
                   key={`r1-${client.id}-${idx}`}
-                  className="w-56 h-28 rounded-2xl bg-[#14141A] border border-[#27272A] hover:border-[#3F3F46] p-4 flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 group relative flex-shrink-0 cursor-default shadow-sm"
+                  className="w-52 flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 group relative flex-shrink-0 cursor-default"
                 >
-                  <div className="w-full h-16 flex items-center justify-center overflow-hidden rounded-lg bg-white/95 p-2">
-                    <img
-                      src={client.logoUrl}
-                      alt={client.name}
-                      className="max-h-full max-w-full object-contain filter group-hover:scale-110 transition-transform duration-300"
-                    />
+                  {/* Hexagonal / Circular Soft-Squircle Pill Badge with Ambient Glow */}
+                  <div className="relative w-40 h-40 rounded-full p-[2px] bg-gradient-to-b from-white/20 via-[#27272A] to-transparent shadow-[0_10px_30px_rgba(0,0,0,0.6)] group-hover:from-[var(--theme-primary)] group-hover:to-white/20 transition-all duration-500">
+                    <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center p-3 shadow-inner">
+                      <img
+                        src={client.logoUrl}
+                        alt={client.name}
+                        className="w-full h-full object-contain filter group-hover:scale-110 transition-transform duration-300"
+                      />
+                    </div>
                   </div>
-                  <span className="text-[11px] font-mono text-[#A1A1AA] mt-2 tracking-wider truncate w-full text-center">
+                  <span className="text-[12px] font-mono font-medium text-[#D4D4D8] mt-3 tracking-wider truncate w-full text-center group-hover:text-white transition-colors">
                     {client.name}
                   </span>
                 </div>
@@ -88,9 +92,9 @@ export function ClientsMarquee() {
           </div>
 
           {/* Row 2: Rightward Scrolling (Reverse) */}
-          <div className="relative overflow-hidden whitespace-nowrap py-2 [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]">
+          <div className="relative overflow-hidden whitespace-nowrap py-3 [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]">
             <div
-              className="flex items-center gap-5"
+              className="flex items-center gap-6"
               style={{
                 width: 'max-content',
                 animation: 'marquee 38s linear infinite reverse'
@@ -99,16 +103,19 @@ export function ClientsMarquee() {
               {[...row2, ...row2, ...row2].map((client, idx) => (
                 <div
                   key={`r2-${client.id}-${idx}`}
-                  className="w-56 h-28 rounded-2xl bg-[#14141A] border border-[#27272A] hover:border-[#3F3F46] p-4 flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 group relative flex-shrink-0 cursor-default shadow-sm"
+                  className="w-52 flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 group relative flex-shrink-0 cursor-default"
                 >
-                  <div className="w-full h-16 flex items-center justify-center overflow-hidden rounded-lg bg-white/95 p-2">
-                    <img
-                      src={client.logoUrl}
-                      alt={client.name}
-                      className="max-h-full max-w-full object-contain filter group-hover:scale-110 transition-transform duration-300"
-                    />
+                  {/* Hexagonal / Circular Soft-Squircle Pill Badge with Ambient Glow */}
+                  <div className="relative w-40 h-40 rounded-full p-[2px] bg-gradient-to-b from-white/20 via-[#27272A] to-transparent shadow-[0_10px_30px_rgba(0,0,0,0.6)] group-hover:from-[var(--theme-primary)] group-hover:to-white/20 transition-all duration-500">
+                    <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center p-3 shadow-inner">
+                      <img
+                        src={client.logoUrl}
+                        alt={client.name}
+                        className="w-full h-full object-contain filter group-hover:scale-110 transition-transform duration-300"
+                      />
+                    </div>
                   </div>
-                  <span className="text-[11px] font-mono text-[#A1A1AA] mt-2 tracking-wider truncate w-full text-center">
+                  <span className="text-[12px] font-mono font-medium text-[#D4D4D8] mt-3 tracking-wider truncate w-full text-center group-hover:text-white transition-colors">
                     {client.name}
                   </span>
                 </div>
@@ -117,25 +124,27 @@ export function ClientsMarquee() {
           </div>
         </div>
       ) : (
-        /* Full 20-Brand Grid View */
+        /* Full Brand Grid View */
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
             {clients.map((client) => (
               <div
                 key={client.id}
-                className="rounded-2xl bg-[#14141A] border border-[#27272A] hover:border-[#3F3F46] p-4 flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 group shadow-sm"
+                className="p-5 rounded-3xl bg-[#121216]/80 border border-[#27272A] hover:border-[#3F3F46] flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 group shadow-lg"
               >
-                <div className="w-full h-20 flex items-center justify-center overflow-hidden rounded-xl bg-white/95 p-2 mb-2.5">
-                  <img
-                    src={client.logoUrl}
-                    alt={client.name}
-                    className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-300"
-                  />
+                <div className="relative w-36 h-36 rounded-full p-[2px] bg-gradient-to-b from-white/20 via-[#27272A] to-transparent mb-3 group-hover:from-[var(--theme-primary)] group-hover:to-white/20 transition-all duration-500">
+                  <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center p-3 shadow-inner">
+                    <img
+                      src={client.logoUrl}
+                      alt={client.name}
+                      className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                    />
+                  </div>
                 </div>
                 <p className="text-xs font-bold text-white text-center truncate w-full">
                   {client.name}
                 </p>
-                <span className="text-[10px] font-mono text-[#9E9EA7] tracking-wider truncate w-full text-center">
+                <span className="text-[10px] font-mono text-[#9E9EA7] tracking-wider truncate w-full text-center mt-0.5">
                   {client.category}
                 </span>
               </div>

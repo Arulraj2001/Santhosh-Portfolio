@@ -67,11 +67,27 @@ function getInitialState(): AppState {
         ...profile.socialLinks
       };
 
+      // Auto-migrate clients if legacy logos (named after old files) or count mismatch exist
+      let clients = parsed.clients || initialClients;
+      const hasOldLogo = clients.some((c: any) =>
+        c.logoUrl && (
+          c.logoUrl.includes('tarani-soaps') ||
+          c.logoUrl.includes('siruvaani') ||
+          c.logoUrl.includes('mayil-mark') ||
+          c.logoUrl.includes('cibo') ||
+          c.logoUrl.includes('the-zen-park') ||
+          c.logoUrl.includes('hotel-chenthur-park')
+        )
+      );
+      if (hasOldLogo || !clients || clients.length < 22) {
+        clients = initialClients;
+      }
+
       return {
         settings: parsed.settings || initialSiteSettings,
         profile,
         metrics: parsed.metrics || initialMetrics,
-        clients: parsed.clients || initialClients,
+        clients,
         projects: parsed.projects || initialProjects,
         workProcess: parsed.workProcess || initialWorkProcess,
         experiences: parsed.experiences || initialExperiences,
@@ -352,14 +368,29 @@ async function fetchFromSupabase() {
 
     const { data: clientsData } = await client.from('clients').select('*').order('order_index');
     if (clientsData && clientsData.length > 0) {
-      currentState.clients = clientsData.map((c: any) => ({
-        id: c.id,
-        name: c.name,
-        logoUrl: c.logo_url,
-        category: c.category,
-        featured: c.featured,
-        orderIndex: c.order_index
-      }));
+      // If database has old logos (e.g. tarani-soaps.png) that were deleted locally, map to new 1..22.png or fall back to initialClients
+      const hasOldLogo = clientsData.some((c: any) =>
+        c.logo_url && (
+          c.logo_url.includes('tarani-soaps') ||
+          c.logo_url.includes('siruvaani') ||
+          c.logo_url.includes('mayil-mark') ||
+          c.logo_url.includes('cibo') ||
+          c.logo_url.includes('the-zen-park') ||
+          c.logo_url.includes('hotel-chenthur-park')
+        )
+      );
+      if (hasOldLogo) {
+        currentState.clients = initialClients;
+      } else {
+        currentState.clients = clientsData.map((c: any) => ({
+          id: c.id,
+          name: c.name,
+          logoUrl: c.logo_url,
+          category: c.category,
+          featured: c.featured,
+          orderIndex: c.order_index
+        }));
+      }
     }
 
     const { data: inqData } = await client.from('inquiries').select('*').order('created_at', { ascending: false });

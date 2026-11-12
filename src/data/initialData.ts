@@ -134,26 +134,28 @@ export const initialMetrics: Metric[] = [
 ];
 
 export const initialClients: Client[] = [
-  { id: 'c1', name: 'Tarani Soaps', logoUrl: '/assets/clients/tarani-soaps.png', category: 'FMCG & Personal Care', featured: true, orderIndex: 0 },
-  { id: 'c2', name: 'HR', logoUrl: '/assets/clients/hr.png', category: 'Corporate Services', featured: true, orderIndex: 1 },
-  { id: 'c3', name: 'The Zen Park', logoUrl: '/assets/clients/the-zen-park.png', category: 'Hospitality & Leisure', featured: true, orderIndex: 2 },
-  { id: 'c4', name: 'Siruvaani', logoUrl: '/assets/clients/siruvaani.png', category: 'Restaurant & Dining', featured: true, orderIndex: 3 },
-  { id: 'c5', name: 'Hotel Chenthur Park', logoUrl: '/assets/clients/hotel-chenthur-park.png', category: 'Hotels & Resorts', featured: true, orderIndex: 4 },
-  { id: 'c6', name: 'The Arcadia Hotel Supplies', logoUrl: '/assets/clients/the-arcadia-supplies.png', category: 'B2B Hospitality', featured: true, orderIndex: 5 },
-  { id: 'c7', name: 'The Arcadia Boutique Hotel', logoUrl: '/assets/clients/the-arcadia-hotel.png', category: 'Luxury Stays', featured: true, orderIndex: 6 },
-  { id: 'c8', name: 'Vanaalayam Retreat', logoUrl: '/assets/clients/vanaalayam.png', category: 'Eco Resort & Wellness', featured: true, orderIndex: 7 },
-  { id: 'c9', name: 'SMB Bakery', logoUrl: '/assets/clients/smb-bakery.png', category: 'Bakery & Confectionery', featured: true, orderIndex: 8 },
-  { id: 'c10', name: 'Cibo Fine Dining', logoUrl: '/assets/clients/cibo.png', category: 'Culinary Experiences', featured: true, orderIndex: 9 },
-  { id: 'c11', name: 'Mayil Mark', logoUrl: '/assets/clients/mayil-mark.png', category: 'Traditional Spices & Foods', featured: true, orderIndex: 10 },
-  { id: 'c12', name: 'Insta Magic', logoUrl: '/assets/clients/insta-magic.png', category: 'Instant Food Products', featured: true, orderIndex: 11 },
-  { id: 'c13', name: 'Nithara Coffee', logoUrl: '/assets/clients/nithara-coffee.png', category: 'Artisan Coffee Roasters', featured: true, orderIndex: 12 },
-  { id: 'c14', name: 'Cream Centre', logoUrl: '/assets/clients/cream-centre.png', category: 'Veg Fine Dine Salem', featured: true, orderIndex: 13 },
-  { id: 'c15', name: 'CJ Pallazzio', logoUrl: '/assets/clients/cj-pallazzio.png', category: 'Luxury Hotel & Banquets', featured: true, orderIndex: 14 },
-  { id: 'c16', name: 'KPR Quality Foods', logoUrl: '/assets/clients/kpr-foods.png', category: 'Healthy Food Products', featured: true, orderIndex: 15 },
-  { id: 'c17', name: 'SKV', logoUrl: '/assets/clients/skv.png', category: 'Educational / Retail', featured: true, orderIndex: 16 },
-  { id: 'c18', name: 'Pristine True Health', logoUrl: '/assets/clients/pristine-health.png', category: 'Healthcare & Wellness', featured: true, orderIndex: 17 },
-  { id: 'c19', name: 'SMB', logoUrl: '/assets/clients/smb.png', category: 'Food Enterprise', featured: true, orderIndex: 18 },
-  { id: 'c20', name: 'Tastee Masala', logoUrl: '/assets/clients/tastee-masala.png', category: 'Spices & Seasonings', featured: true, orderIndex: 19 }
+  { id: 'c1', name: 'Mayil Mark', logoUrl: '/assets/clients/1.png', category: 'Traditional Spices & Foods', featured: true, orderIndex: 0 },
+  { id: 'c2', name: 'Insta Magic', logoUrl: '/assets/clients/2.png', category: 'Instant Food Products', featured: true, orderIndex: 1 },
+  { id: 'c3', name: 'Nithara Coffee', logoUrl: '/assets/clients/3.png', category: 'Artisan Coffee Roasters', featured: true, orderIndex: 2 },
+  { id: 'c4', name: 'KPR Quality Foods', logoUrl: '/assets/clients/4.png', category: 'Healthy Food Products', featured: true, orderIndex: 3 },
+  { id: 'c5', name: 'Cream Centre', logoUrl: '/assets/clients/5.png', category: 'Veg Fine Dine Salem', featured: true, orderIndex: 4 },
+  { id: 'c6', name: 'CJ Pallazzio', logoUrl: '/assets/clients/6.png', category: 'Luxury Hotel & Banquets', featured: true, orderIndex: 5 },
+  { id: 'c7', name: 'SKV', logoUrl: '/assets/clients/7.png', category: 'Educational / Retail', featured: true, orderIndex: 6 },
+  { id: 'c8', name: 'Pristine True Health', logoUrl: '/assets/clients/8.png', category: 'Healthcare & Wellness', featured: true, orderIndex: 7 },
+  { id: 'c9', name: 'Pristine Health Nutrition', logoUrl: '/assets/clients/9.png', category: 'Healthcare & Wellness', featured: true, orderIndex: 8 },
+  { id: 'c10', name: 'SMB', logoUrl: '/assets/clients/10.png', category: 'Food Enterprise', featured: true, orderIndex: 9 },
+  { id: 'c11', name: 'Tastee Masala', logoUrl: '/assets/clients/11.png', category: 'Spices & Seasonings', featured: true, orderIndex: 10 },
+  { id: 'c12', name: 'SMB Bakery', logoUrl: '/assets/clients/12.png', category: 'Bakery & Confectionery', featured: true, orderIndex: 11 },
+  { id: 'c13', name: 'Tarani Soaps', logoUrl: '/assets/clients/13.png', category: 'FMCG & Personal Care', featured: true, orderIndex: 12 },
+  { id: 'c14', name: 'HR', logoUrl: '/assets/clients/14.png', category: 'Corporate Services', featured: true, orderIndex: 13 },
+  { id: 'c15', name: 'Siruvaani', logoUrl: '/assets/clients/15.png', category: 'Restaurant & Dining', featured: true, orderIndex: 14 },
+  { id: 'c16', name: 'The Zen Park', logoUrl: '/assets/clients/16.png', category: 'Hospitality & Leisure', featured: true, orderIndex: 15 },
+  { id: 'c17', name: 'Hotel Chenthur Park', logoUrl: '/assets/clients/17.png', category: 'Hotels & Resorts', featured: true, orderIndex: 16 },
+  { id: 'c18', name: 'The Arcadia Hotel Supplies', logoUrl: '/assets/clients/18.png', category: 'B2B Hospitality', featured: true, orderIndex: 17 },
+  { id: 'c19', name: 'The Arcadia Boutique Hotel', logoUrl: '/assets/clients/19.png', category: 'Luxury Stays', featured: true, orderIndex: 18 },
+  { id: 'c20', name: 'The Arcadia', logoUrl: '/assets/clients/20.png', category: 'Hospitality & Banquets', featured: true, orderIndex: 19 },
+  { id: 'c21', name: 'Vanaalayam Retreat', logoUrl: '/assets/clients/21.png', category: 'Eco Resort & Wellness', featured: true, orderIndex: 20 },
+  { id: 'c22', name: 'Cibo Fine Dining', logoUrl: '/assets/clients/22.png', category: 'Culinary Experiences', featured: true, orderIndex: 21 }
 ];
 
 export const initialProjects: Project[] = [

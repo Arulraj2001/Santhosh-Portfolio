@@ -65,7 +65,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
   const [newClient, setNewClient] = useState({
     name: '',
     category: 'Brand Partner',
-    logoUrl: '/assets/clients/tarani-soaps.png'
+    logoUrl: '/assets/clients/1.png'
   });
 
   // New Project Form state
@@ -186,7 +186,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
     setNewClient({
       name: '',
       category: 'Brand Partner',
-      logoUrl: '/assets/clients/tarani-soaps.png'
+      logoUrl: '/assets/clients/1.png'
     });
   };
 
@@ -346,7 +346,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
           {[
             { id: 'theme', label: 'Theme & Colors', icon: <Palette className="w-3.5 h-3.5" /> },
             { id: 'profile', label: 'Profile & Metrics', icon: <User className="w-3.5 h-3.5" /> },
-            { id: 'clients', label: `20 Brands (${state.clients.length})`, icon: <Building2 className="w-3.5 h-3.5" /> },
+            { id: 'clients', label: `Brands (${state.clients.length})`, icon: <Building2 className="w-3.5 h-3.5" /> },
             { id: 'projects', label: `Case Studies (${state.projects.length})`, icon: <FolderKanban className="w-3.5 h-3.5" /> },
             { id: 'experience', label: 'Experience & Edu', icon: <Briefcase className="w-3.5 h-3.5" /> },
             { id: 'skills', label: `Skills (${state.skills.length})`, icon: <Wrench className="w-3.5 h-3.5" /> },
@@ -835,13 +835,13 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
             </div>
           )}
 
-          {/* TAB 3: 20 BRANDS CLIENTS CMS */}
+          {/* TAB 3: CLIENT BRANDS CMS */}
           {activeTab === 'clients' && (
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <h3 className="font-display font-bold text-lg text-white">
-                    20 Client Brands Portfolio
+                    Client Brands Portfolio ({state.clients.length})
                   </h3>
                   <p className="text-xs text-[#A1A1AA]">
                     Manage brand logos, categories, and real-time order in the 3D ticker.
@@ -894,8 +894,10 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
                       <Trash2 className="w-3 h-3" />
                     </button>
 
-                    <div className="w-full h-16 flex items-center justify-center bg-white/95 rounded-xl p-1.5">
-                      <img src={c.logoUrl} alt={c.name} className="max-h-full max-w-full object-contain" />
+                    <div className="relative w-28 h-28 rounded-full p-[2px] bg-gradient-to-b from-white/20 via-[#27272A] to-transparent shadow">
+                      <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center p-2">
+                        <img src={c.logoUrl} alt={c.name} className="w-full h-full object-contain" />
+                      </div>
                     </div>
 
                     <input
