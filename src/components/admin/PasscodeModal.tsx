@@ -64,7 +64,7 @@ export function PasscodeModal({ isOpen, onClose, onSuccess }: PasscodeModalProps
                 setPin(e.target.value);
                 setError(false);
               }}
-              placeholder="Enter PIN (Default: 2101)"
+              placeholder="Enter PIN (Default: 1234)"
               className="w-full px-4 py-3 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-center tracking-widest text-lg focus:outline-none focus:border-white transition-colors"
             />
           </div>
@@ -72,7 +72,7 @@ export function PasscodeModal({ isOpen, onClose, onSuccess }: PasscodeModalProps
           {error && (
             <div className="flex items-center justify-center gap-1.5 text-xs text-red-400 font-mono">
               <AlertCircle className="w-3.5 h-3.5" />
-              <span>Incorrect PIN. Try: 2101 or santhosh</span>
+              <span>Incorrect PIN. Try: 1234 or santhosh</span>
             </div>
           )}
 
@@ -86,7 +86,7 @@ export function PasscodeModal({ isOpen, onClose, onSuccess }: PasscodeModalProps
           </button>
 
           <p className="text-[11px] font-mono text-[#71717A]">
-            Quick tip: Default passcode is <strong className="text-white">2101</strong>
+            Quick tip: Default passcode is <strong className="text-white">1234</strong>
           </p>
         </form>
       </div>
