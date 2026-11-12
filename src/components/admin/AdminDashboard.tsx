@@ -894,8 +894,8 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
                       <Trash2 className="w-3 h-3" />
                     </button>
 
-                    <div className="relative w-28 h-28 rounded-full p-[2px] bg-gradient-to-b from-white/20 via-[#27272A] to-transparent shadow">
-                      <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center p-2">
+                    <div className="relative w-20 h-20 rounded-full p-[2px] bg-gradient-to-b from-white/20 via-[#27272A] to-transparent shadow">
+                      <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center p-1.5">
                         <img src={c.logoUrl} alt={c.name} className="w-full h-full object-contain" />
                       </div>
                     </div>

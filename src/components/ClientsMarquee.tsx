@@ -71,11 +71,11 @@ export function ClientsMarquee() {
               {[...row1, ...row1, ...row1].map((client, idx) => (
                 <div
                   key={`r1-${client.id}-${idx}`}
-                  className="w-52 flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 group relative flex-shrink-0 cursor-default"
+                  className="w-40 flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 group relative flex-shrink-0 cursor-default"
                 >
                   {/* Hexagonal / Circular Soft-Squircle Pill Badge with Ambient Glow */}
-                  <div className="relative w-40 h-40 rounded-full p-[2px] bg-gradient-to-b from-white/20 via-[#27272A] to-transparent shadow-[0_10px_30px_rgba(0,0,0,0.6)] group-hover:from-[var(--theme-primary)] group-hover:to-white/20 transition-all duration-500">
-                    <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center p-3 shadow-inner">
+                  <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-[2px] bg-gradient-to-b from-white/20 via-[#27272A] to-transparent shadow-[0_8px_24px_rgba(0,0,0,0.5)] group-hover:from-[var(--theme-primary)] group-hover:to-white/20 transition-all duration-500">
+                    <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center p-2.5 shadow-inner">
                       <img
                         src={client.logoUrl}
                         alt={client.name}
@@ -83,7 +83,7 @@ export function ClientsMarquee() {
                       />
                     </div>
                   </div>
-                  <span className="text-[12px] font-mono font-medium text-[#D4D4D8] mt-3 tracking-wider truncate w-full text-center group-hover:text-white transition-colors">
+                  <span className="text-[11px] font-mono font-medium text-[#D4D4D8] mt-2.5 tracking-wider truncate w-full text-center group-hover:text-white transition-colors">
                     {client.name}
                   </span>
                 </div>
@@ -103,11 +103,11 @@ export function ClientsMarquee() {
               {[...row2, ...row2, ...row2].map((client, idx) => (
                 <div
                   key={`r2-${client.id}-${idx}`}
-                  className="w-52 flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 group relative flex-shrink-0 cursor-default"
+                  className="w-40 flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 group relative flex-shrink-0 cursor-default"
                 >
                   {/* Hexagonal / Circular Soft-Squircle Pill Badge with Ambient Glow */}
-                  <div className="relative w-40 h-40 rounded-full p-[2px] bg-gradient-to-b from-white/20 via-[#27272A] to-transparent shadow-[0_10px_30px_rgba(0,0,0,0.6)] group-hover:from-[var(--theme-primary)] group-hover:to-white/20 transition-all duration-500">
-                    <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center p-3 shadow-inner">
+                  <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-[2px] bg-gradient-to-b from-white/20 via-[#27272A] to-transparent shadow-[0_8px_24px_rgba(0,0,0,0.5)] group-hover:from-[var(--theme-primary)] group-hover:to-white/20 transition-all duration-500">
+                    <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center p-2.5 shadow-inner">
                       <img
                         src={client.logoUrl}
                         alt={client.name}
@@ -115,7 +115,7 @@ export function ClientsMarquee() {
                       />
                     </div>
                   </div>
-                  <span className="text-[12px] font-mono font-medium text-[#D4D4D8] mt-3 tracking-wider truncate w-full text-center group-hover:text-white transition-colors">
+                  <span className="text-[11px] font-mono font-medium text-[#D4D4D8] mt-2.5 tracking-wider truncate w-full text-center group-hover:text-white transition-colors">
                     {client.name}
                   </span>
                 </div>
@@ -126,14 +126,14 @@ export function ClientsMarquee() {
       ) : (
         /* Full Brand Grid View */
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
             {clients.map((client) => (
               <div
                 key={client.id}
-                className="p-5 rounded-3xl bg-[#121216]/80 border border-[#27272A] hover:border-[#3F3F46] flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 group shadow-lg"
+                className="p-4 rounded-3xl bg-[#121216]/80 border border-[#27272A] hover:border-[#3F3F46] flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 group shadow-lg"
               >
-                <div className="relative w-36 h-36 rounded-full p-[2px] bg-gradient-to-b from-white/20 via-[#27272A] to-transparent mb-3 group-hover:from-[var(--theme-primary)] group-hover:to-white/20 transition-all duration-500">
-                  <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center p-3 shadow-inner">
+                <div className="relative w-28 h-28 rounded-full p-[2px] bg-gradient-to-b from-white/20 via-[#27272A] to-transparent mb-2.5 group-hover:from-[var(--theme-primary)] group-hover:to-white/20 transition-all duration-500">
+                  <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center p-2.5 shadow-inner">
                     <img
                       src={client.logoUrl}
                       alt={client.name}
