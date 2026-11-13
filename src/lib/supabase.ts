@@ -6,8 +6,8 @@ const STORAGE_KEY_ANON = 'santhosh_portfolio_supabase_anon';
 export function getSupabaseCredentials(): { url: string; key: string } {
   const localUrl = localStorage.getItem(STORAGE_KEY_URL);
   const localKey = localStorage.getItem(STORAGE_KEY_ANON);
-  const envUrl = (import.meta.env.VITE_SUPABASE_URL as string) || '';
-  const envKey = (import.meta.env.VITE_SUPABASE_ANON_KEY as string) || '';
+  const envUrl = (import.meta.env.VITE_SUPABASE_URL as string) || 'https://nvyiwnjlvugcizbiqkqa.supabase.co';
+  const envKey = (import.meta.env.VITE_SUPABASE_ANON_KEY as string) || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im52eWl3bmpsdnVnY2l6Ymlxa3FhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxODMzNDYsImV4cCI6MjEwODc1OTM0Nn0.-iRlRVj68OApLFtWDjVoTHqsO-FerLlVc5N8zWjG6XI';
 
   return {
     url: localUrl || envUrl,

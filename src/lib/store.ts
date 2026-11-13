@@ -27,7 +27,7 @@ import {
 } from '../data/initialData';
 import { getSupabaseClient, isSupabaseConfigured } from './supabase';
 
-const STORAGE_KEY = 'santhosh_portfolio_cms_v1';
+const STORAGE_KEY = 'santhosh_portfolio_cms_v2';
 
 export interface AppState {
   settings: SiteSettings;
