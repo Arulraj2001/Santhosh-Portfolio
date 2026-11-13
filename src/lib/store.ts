@@ -106,7 +106,8 @@ function getInitialState(): AppState {
       const settings: SiteSettings = {
         ...initialSiteSettings,
         ...(parsed.settings || {}),
-        showExperience: parsed.settings?.showExperience !== undefined ? parsed.settings.showExperience : true
+        showExperience: parsed.settings?.showExperience !== undefined ? parsed.settings.showExperience : true,
+        showLiveClients: parsed.settings?.showLiveClients !== undefined ? parsed.settings.showLiveClients : true
       };
 
       return {
@@ -240,7 +241,7 @@ export function usePortfolioStore() {
       notify();
       syncSettingToSupabase();
     },
-    updateSectionVisibility: (vis: { showExperience?: boolean }) => {
+    updateSectionVisibility: (vis: { showExperience?: boolean; showLiveClients?: boolean }) => {
       currentState.settings = {
         ...currentState.settings,
         ...vis
@@ -415,7 +416,10 @@ export async function fetchFromSupabase() {
         fxSettings: settingsData.fx_settings || currentState.settings.fxSettings,
         showExperience: settingsData.fx_settings?.showExperience !== undefined
           ? settingsData.fx_settings.showExperience
-          : (currentState.settings.showExperience ?? true)
+          : (currentState.settings.showExperience ?? true),
+        showLiveClients: settingsData.fx_settings?.showLiveClients !== undefined
+          ? settingsData.fx_settings.showLiveClients
+          : (currentState.settings.showLiveClients ?? true)
       };
 
       if (Array.isArray(settingsData.fx_settings?.liveClients) && settingsData.fx_settings.liveClients.length > 0) {
@@ -604,6 +608,7 @@ export async function syncSettingToSupabase() {
       fx_settings: {
         ...currentState.settings.fxSettings,
         showExperience: currentState.settings.showExperience !== false,
+        showLiveClients: currentState.settings.showLiveClients !== false,
         liveClients: currentState.liveClients
       },
       updated_at: new Date().toISOString()

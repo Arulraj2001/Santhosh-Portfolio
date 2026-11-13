@@ -31,6 +31,7 @@ export interface SiteSettings {
   typographyPreset: string;
   fxSettings: FxSettings;
   showExperience?: boolean;
+  showLiveClients?: boolean;
 }
 
 export interface Profile {

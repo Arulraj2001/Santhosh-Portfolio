@@ -8,7 +8,7 @@ export function LiveClientsSection() {
   const { liveClients = [], settings } = state;
   const primaryColor = settings.customColors.primary;
 
-  if (!liveClients || liveClients.length === 0) {
+  if (settings.showLiveClients === false || !liveClients || liveClients.length === 0) {
     return null;
   }
 

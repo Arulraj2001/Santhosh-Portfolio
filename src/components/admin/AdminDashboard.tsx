@@ -982,6 +982,42 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
           {/* TAB 3.5: LIVE CLIENTS (CURRENTLY WORKING WITH) CMS */}
           {activeTab === 'live-clients' && (
             <div className="space-y-6">
+              {/* Live Clients Public Section Visibility Toggle Card */}
+              <div className="p-5 rounded-2xl bg-[#121216] border border-[#27272A] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-display font-bold text-sm text-white">Live Clients Section Visibility</span>
+                    <span
+                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider ${
+                        state.settings.showLiveClients !== false
+                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                          : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                      }`}
+                    >
+                      {state.settings.showLiveClients !== false ? '● Visible on Live Portfolio' : '○ Hidden from Live Portfolio'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-[#A1A1AA] mt-1.5 leading-relaxed">
+                    Toggle to immediately show or hide the "Currently Working With Live Clients" beacon section on your live portfolio. When turned off, the section and its navbar link are completely hidden from public visitors.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => store.updateSectionVisibility({ showLiveClients: state.settings.showLiveClients === false })}
+                  className={`relative inline-flex h-7 w-14 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                    state.settings.showLiveClients !== false ? 'bg-emerald-500' : 'bg-[#27272A]'
+                  }`}
+                  title={state.settings.showLiveClients !== false ? 'Click to hide Live Clients section from public site' : 'Click to show Live Clients section on public site'}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                      state.settings.showLiveClients !== false ? 'translate-x-7' : 'translate-x-0'
+                    }`}
+                  />
+                </button>
+              </div>
+
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-widest border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 mb-2">

@@ -105,7 +105,8 @@ export const initialSiteSettings: SiteSettings = {
     cardTilt: true,
     marqueeSpeed: 35
   },
-  showExperience: true
+  showExperience: true,
+  showLiveClients: true
 };
 
 export const initialProfile: Profile = {

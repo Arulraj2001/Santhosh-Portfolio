@@ -20,9 +20,10 @@ export function Navbar({ onOpenAdmin }: NavbarProps) {
   }, []);
 
   const showExperience = state.settings.showExperience !== false;
+  const showLiveClients = state.settings.showLiveClients !== false;
   const navLinks = [
     { label: 'Overview', href: '#hero' },
-    { label: 'Live Clients', href: '#live-clients' },
+    ...(showLiveClients ? [{ label: 'Live Clients', href: '#live-clients' }] : []),
     { label: 'Worked Clients', href: '#clients' },
     { label: 'Case Studies', href: '#projects' },
     { label: 'Process', href: '#process' },
