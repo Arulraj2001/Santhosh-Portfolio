@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
+import { LiveClientsSection } from './components/LiveClientsSection';
 import { ClientsMarquee } from './components/ClientsMarquee';
 import { CaseStudies } from './components/CaseStudies';
 import { WorkProcess } from './components/WorkProcess';
@@ -73,6 +74,7 @@ export function App() {
       {/* Main Content Sections */}
       <main className="relative z-10">
         <Hero />
+        <LiveClientsSection />
         <ClientsMarquee />
         <CaseStudies />
         <WorkProcess />

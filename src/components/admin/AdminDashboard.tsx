@@ -24,18 +24,20 @@ import {
   Sparkles,
   Download,
   UploadCloud,
-  Check
+  Check,
+  Radio,
+  Eye,
+  EyeOff
 } from 'lucide-react';
-import { usePortfolioStore } from '../../lib/store';
+import { usePortfolioStore, generateUUID, uploadAllToSupabase } from '../../lib/store';
 import { THEME_PRESETS } from '../../data/initialData';
-import { ThemePreset, Client, Project, Skill, Experience, Education, WorkProcessStep, Metric } from '../../types';
+import { ThemePreset, Client, LiveClient, Project, Skill, Experience, Education, WorkProcessStep, Metric } from '../../types';
 import {
   isSupabaseConfigured,
   getSupabaseCredentials,
   saveSupabaseCredentials,
   uploadAssetFile
 } from '../../lib/supabase';
-import { uploadAllToSupabase } from '../../lib/store';
 
 interface AdminDashboardProps {
   isOpen: boolean;
@@ -48,7 +50,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
   const primaryColor = state.settings.customColors.primary;
 
   const [activeTab, setActiveTab] = useState<
-    'theme' | 'profile' | 'clients' | 'projects' | 'experience' | 'skills' | 'process' | 'inquiries' | 'supabase'
+    'theme' | 'profile' | 'clients' | 'live-clients' | 'projects' | 'experience' | 'skills' | 'process' | 'inquiries' | 'supabase'
   >('theme');
 
   // Supabase state
@@ -65,6 +67,16 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
   const [newClient, setNewClient] = useState({
     name: '',
     category: 'Brand Partner',
+    logoUrl: '/assets/clients/1.png'
+  });
+
+  // New Live Client Form state
+  const [newLiveClient, setNewLiveClient] = useState({
+    name: '',
+    category: 'E-Commerce & Retail',
+    status: 'Active Retainer',
+    deliverables: 'Performance Marketing & WhatsApp Funnels',
+    impactMetric: '5.2x ROAS',
     logoUrl: '/assets/clients/1.png'
   });
 
@@ -171,11 +183,21 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
     }
   };
 
-  // CLIENT CRUD
+  const handleLiveClientLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const url = await uploadAssetFile(file, 'clients');
+      if (url) {
+        setNewLiveClient((prev) => ({ ...prev, logoUrl: url }));
+      }
+    }
+  };
+
+  // CLIENT CRUD (Worked Clients)
   const handleAddClient = () => {
     if (!newClient.name) return;
     const clientItem: Client = {
-      id: `c_${Date.now()}`,
+      id: generateUUID(),
       name: newClient.name,
       category: newClient.category,
       logoUrl: newClient.logoUrl,
@@ -194,11 +216,40 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
     store.updateClients(state.clients.filter((c) => c.id !== id));
   };
 
+  // LIVE CLIENT CRUD (Active Partnerships)
+  const handleAddLiveClient = () => {
+    if (!newLiveClient.name.trim()) return;
+    const liveItem: LiveClient = {
+      id: generateUUID(),
+      name: newLiveClient.name.trim(),
+      category: newLiveClient.category.trim() || 'Brand Partner',
+      status: newLiveClient.status.trim() || 'Active Retainer',
+      deliverables: newLiveClient.deliverables.trim(),
+      impactMetric: newLiveClient.impactMetric.trim(),
+      logoUrl: newLiveClient.logoUrl || '/assets/clients/1.png',
+      featured: true,
+      orderIndex: (state.liveClients || []).length
+    };
+    store.updateLiveClients([...(state.liveClients || []), liveItem]);
+    setNewLiveClient({
+      name: '',
+      category: 'E-Commerce & Retail',
+      status: 'Active Retainer',
+      deliverables: 'Performance Marketing & WhatsApp Funnels',
+      impactMetric: '5.2x ROAS',
+      logoUrl: '/assets/clients/1.png'
+    });
+  };
+
+  const handleDeleteLiveClient = (id: string) => {
+    store.updateLiveClients((state.liveClients || []).filter((lc) => lc.id !== id));
+  };
+
   // PROJECT CRUD
   const handleAddProject = () => {
     if (!newProject.title || !newProject.clientName) return;
     const projectItem: Project = {
-      id: `p_${Date.now()}`,
+      id: generateUUID(),
       title: newProject.title,
       clientName: newProject.clientName,
       category: newProject.category,
@@ -243,7 +294,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
   const handleAddExperience = () => {
     if (!newExp.role || !newExp.company) return;
     const expItem: Experience = {
-      id: `exp_${Date.now()}`,
+      id: generateUUID(),
       role: newExp.role,
       company: newExp.company,
       location: newExp.location,
@@ -263,7 +314,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
   const handleAddEducation = () => {
     if (!newEdu.degree || !newEdu.institution) return;
     const eduItem: Education = {
-      id: `edu_${Date.now()}`,
+      id: generateUUID(),
       degree: newEdu.degree,
       institution: newEdu.institution,
       location: newEdu.location,
@@ -283,7 +334,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
   const handleAddSkill = () => {
     if (!newSkill.name) return;
     const skillItem: Skill = {
-      id: `skill_${Date.now()}`,
+      id: generateUUID(),
       category: newSkill.category,
       name: newSkill.name,
       proficiency: Number(newSkill.proficiency) || 90,
@@ -346,7 +397,8 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
           {[
             { id: 'theme', label: 'Theme & Colors', icon: <Palette className="w-3.5 h-3.5" /> },
             { id: 'profile', label: 'Profile & Metrics', icon: <User className="w-3.5 h-3.5" /> },
-            { id: 'clients', label: `Brands (${state.clients.length})`, icon: <Building2 className="w-3.5 h-3.5" /> },
+            { id: 'clients', label: `Worked Clients (${state.clients.length})`, icon: <Building2 className="w-3.5 h-3.5" /> },
+            { id: 'live-clients', label: `Live Clients (${(state.liveClients || []).length})`, icon: <Radio className="w-3.5 h-3.5 text-emerald-400" /> },
             { id: 'projects', label: `Case Studies (${state.projects.length})`, icon: <FolderKanban className="w-3.5 h-3.5" /> },
             { id: 'experience', label: 'Experience & Edu', icon: <Briefcase className="w-3.5 h-3.5" /> },
             { id: 'skills', label: `Skills (${state.skills.length})`, icon: <Wrench className="w-3.5 h-3.5" /> },
@@ -762,7 +814,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
                   <button
                     onClick={() => {
                       const newM: Metric = {
-                        id: `m_${Date.now()}`,
+                        id: generateUUID(),
                         value: '99%',
                         label: 'CLIENT RETENTION',
                         sublabel: 'Custom KPI Metric',
@@ -841,10 +893,10 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <h3 className="font-display font-bold text-lg text-white">
-                    Client Brands Portfolio ({state.clients.length})
+                    Clients Worked With ({state.clients.length})
                   </h3>
                   <p className="text-xs text-[#A1A1AA]">
-                    Manage brand logos, categories, and real-time order in the 3D ticker.
+                    Manage brand logos, categories, and real-time order in the worked clients marquee.
                   </p>
                 </div>
 
@@ -921,6 +973,231 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
                       }}
                       className="w-full text-center text-[10px] font-mono text-[#9E9EA7] bg-transparent border-b border-transparent hover:border-[#3F3F46] focus:border-white focus:outline-none"
                     />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3.5: LIVE CLIENTS (CURRENTLY WORKING WITH) CMS */}
+          {activeTab === 'live-clients' && (
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-widest border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 mb-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                    <span>Active Engagements & Retainers ({(state.liveClients || []).length})</span>
+                  </div>
+                  <h3 className="font-display font-bold text-lg text-white">
+                    Currently Working With Live Clients
+                  </h3>
+                  <p className="text-xs text-[#A1A1AA]">
+                    Add, edit, or delete live client retainers displayed in the prominent beacon section.
+                  </p>
+                </div>
+              </div>
+
+              {/* Add New Live Client Form */}
+              <div className="p-5 rounded-2xl bg-[#121216] border border-[#27272A] space-y-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-mono uppercase text-[#A1A1AA] font-bold">Add New Live Client Partnership</p>
+                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Zero-Code Instant Sync</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Brand / Client Name *</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Salem Horizon Properties"
+                      value={newLiveClient.name}
+                      onChange={(e) => setNewLiveClient({ ...newLiveClient, name: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Industry / Category</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Real Estate Developer"
+                      value={newLiveClient.category}
+                      onChange={(e) => setNewLiveClient({ ...newLiveClient, category: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Live Status Badge</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Active Meta Ads Retainer"
+                      value={newLiveClient.status}
+                      onChange={(e) => setNewLiveClient({ ...newLiveClient, status: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Deliverables & Scope</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Laser-Targeted Lead Generation & WhatsApp Funnels"
+                      value={newLiveClient.deliverables}
+                      onChange={(e) => setNewLiveClient({ ...newLiveClient, deliverables: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Impact Metric / KPI</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. 180+ Leads/mo or 5.2x ROAS"
+                      value={newLiveClient.impactMetric}
+                      onChange={(e) => setNewLiveClient({ ...newLiveClient, impactMetric: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-white p-1 border border-[#27272A] flex-shrink-0 flex items-center justify-center">
+                      <img src={newLiveClient.logoUrl} alt="Logo" className="w-full h-full object-contain" />
+                    </div>
+                    <label className="px-3 py-1.5 rounded-lg bg-[#18181F] border border-[#27272A] text-xs text-[#FAFAFA] cursor-pointer flex items-center gap-1.5 hover:bg-[#27272A]">
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>Upload Logo</span>
+                      <input type="file" accept="image/*" onChange={handleLiveClientLogoUpload} className="hidden" />
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Or enter logo URL"
+                      value={newLiveClient.logoUrl}
+                      onChange={(e) => setNewLiveClient({ ...newLiveClient, logoUrl: e.target.value })}
+                      className="px-3 py-1.5 rounded-lg bg-[#18181F] border border-[#27272A] text-white text-xs font-mono w-48"
+                    />
+                  </div>
+
+                  <button
+                    onClick={handleAddLiveClient}
+                    className="px-5 py-2 rounded-xl text-xs font-bold text-white uppercase shadow flex items-center gap-2"
+                    style={{ backgroundColor: primaryColor }}
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Add Live Client</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Grid of All Live Clients with Inline Editing */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {(state.liveClients || []).map((lc, idx) => (
+                  <div
+                    key={lc.id || `lc-${idx}`}
+                    className="p-5 rounded-2xl bg-[#121216] border border-[#27272A] hover:border-[#3F3F46] flex flex-col justify-between group relative space-y-3"
+                  >
+                    <button
+                      onClick={() => handleDeleteLiveClient(lc.id)}
+                      className="absolute top-3 right-3 p-1.5 rounded-full bg-red-500/20 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-500/30"
+                      title="Delete live client"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+
+                    <div className="flex items-center gap-3">
+                      <div className="relative w-14 h-14 rounded-full p-[2px] bg-gradient-to-b from-white/20 via-[#27272A] to-transparent shadow flex-shrink-0">
+                        <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center p-1.5">
+                          <img src={lc.logoUrl} alt={lc.name} className="w-full h-full object-contain" />
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0 pr-6">
+                        <input
+                          type="text"
+                          value={lc.name}
+                          onChange={(e) => {
+                            const updated = [...(state.liveClients || [])];
+                            updated[idx] = { ...updated[idx], name: e.target.value };
+                            store.updateLiveClients(updated);
+                          }}
+                          placeholder="Client Name"
+                          className="w-full font-bold text-sm text-white bg-transparent border-b border-transparent hover:border-[#3F3F46] focus:border-white focus:outline-none"
+                        />
+                        <input
+                          type="text"
+                          value={lc.category}
+                          onChange={(e) => {
+                            const updated = [...(state.liveClients || [])];
+                            updated[idx] = { ...updated[idx], category: e.target.value };
+                            store.updateLiveClients(updated);
+                          }}
+                          placeholder="Category"
+                          className="w-full text-xs font-mono text-[#9E9EA7] bg-transparent border-b border-transparent hover:border-[#3F3F46] focus:border-white focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 pt-2 border-t border-[#27272A]">
+                      <div>
+                        <label className="block text-[9px] font-mono uppercase text-[#A1A1AA]">Status Pill</label>
+                        <input
+                          type="text"
+                          value={lc.status || ''}
+                          onChange={(e) => {
+                            const updated = [...(state.liveClients || [])];
+                            updated[idx] = { ...updated[idx], status: e.target.value };
+                            store.updateLiveClients(updated);
+                          }}
+                          placeholder="Status (e.g. Active Meta Ads Retainer)"
+                          className="w-full px-2 py-1 rounded bg-[#18181F] border border-[#27272A] text-emerald-400 text-xs font-mono"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[9px] font-mono uppercase text-[#A1A1AA]">Deliverables / Scope</label>
+                        <input
+                          type="text"
+                          value={lc.deliverables || ''}
+                          onChange={(e) => {
+                            const updated = [...(state.liveClients || [])];
+                            updated[idx] = { ...updated[idx], deliverables: e.target.value };
+                            store.updateLiveClients(updated);
+                          }}
+                          placeholder="Deliverables"
+                          className="w-full px-2 py-1 rounded bg-[#18181F] border border-[#27272A] text-white text-xs"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[9px] font-mono uppercase text-[#A1A1AA]">Impact Metric / KPI</label>
+                        <input
+                          type="text"
+                          value={lc.impactMetric || ''}
+                          onChange={(e) => {
+                            const updated = [...(state.liveClients || [])];
+                            updated[idx] = { ...updated[idx], impactMetric: e.target.value };
+                            store.updateLiveClients(updated);
+                          }}
+                          placeholder="e.g. 5.2x ROAS"
+                          className="w-full px-2 py-1 rounded bg-[#18181F] border border-[#27272A] text-white text-xs font-mono"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[9px] font-mono uppercase text-[#A1A1AA]">Logo URL</label>
+                        <input
+                          type="text"
+                          value={lc.logoUrl}
+                          onChange={(e) => {
+                            const updated = [...(state.liveClients || [])];
+                            updated[idx] = { ...updated[idx], logoUrl: e.target.value };
+                            store.updateLiveClients(updated);
+                          }}
+                          placeholder="Logo Path / URL"
+                          className="w-full px-2 py-1 rounded bg-[#18181F] border border-[#27272A] text-[#9E9EA7] text-xs font-mono"
+                        />
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -1151,6 +1428,42 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
           {/* TAB 5: EXPERIENCE & EDUCATION CMS */}
           {activeTab === 'experience' && (
             <div className="space-y-8 max-w-4xl">
+              {/* Experience Visibility Toggle Card */}
+              <div className="p-5 rounded-2xl bg-[#121216] border border-[#27272A] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-display font-bold text-sm text-white">Experience Section Visibility</span>
+                    <span
+                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider ${
+                        state.settings.showExperience !== false
+                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                          : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                      }`}
+                    >
+                      {state.settings.showExperience !== false ? '● Visible on Live Portfolio' : '○ Hidden from Live Portfolio'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-[#A1A1AA] mt-1.5 leading-relaxed">
+                    Toggle to immediately show or hide the Experience timeline on your public portfolio. When turned off, the Experience tab and section are hidden from public visitors, keeping only Skills & Education visible.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => store.updateSectionVisibility({ showExperience: state.settings.showExperience === false })}
+                  className={`relative inline-flex h-7 w-14 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                    state.settings.showExperience !== false ? 'bg-emerald-500' : 'bg-[#27272A]'
+                  }`}
+                  title={state.settings.showExperience !== false ? 'Click to hide Experience section from public site' : 'Click to show Experience section on public site'}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                      state.settings.showExperience !== false ? 'translate-x-7' : 'translate-x-0'
+                    }`}
+                  />
+                </button>
+              </div>
+
               {/* Experience Timeline Section */}
               <div className="space-y-4">
                 <h3 className="font-display font-bold text-lg text-white">
@@ -1417,7 +1730,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
                 <button
                   onClick={() => {
                     const newStep: WorkProcessStep = {
-                      id: `wp_${Date.now()}`,
+                      id: generateUUID(),
                       stepNumber: `0${state.workProcess.length + 1}`,
                       title: 'NEW PHASE',
                       description: 'Custom execution phase description.',

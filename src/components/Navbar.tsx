@@ -19,12 +19,14 @@ export function Navbar({ onOpenAdmin }: NavbarProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const showExperience = state.settings.showExperience !== false;
   const navLinks = [
     { label: 'Overview', href: '#hero' },
-    { label: 'Brands', href: '#clients' },
+    { label: 'Live Clients', href: '#live-clients' },
+    { label: 'Worked Clients', href: '#clients' },
     { label: 'Case Studies', href: '#projects' },
     { label: 'Process', href: '#process' },
-    { label: 'Experience', href: '#experience' },
+    ...(showExperience ? [{ label: 'Experience', href: '#experience' }] : [{ label: 'Skills', href: '#experience' }]),
     { label: 'Contact', href: '#contact' }
   ];
 

@@ -26,13 +26,13 @@ export function ClientsMarquee() {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-[#9E9EA7] border border-[#27272A] bg-[#121216] mb-3">
               <Building2 className="w-3.5 h-3.5" style={{ color: primaryColor }} />
-              <span>Proven Brand Portfolio</span>
+              <span>Clients Worked With • Portfolio</span>
             </div>
             <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white uppercase">
-              {clients.length}+ Brands Managed & Scaled
+              {clients.length}+ Brands Worked With & Scaled
             </h2>
             <p className="text-sm text-[#A1A1AA] mt-2 max-w-xl">
-              From hospitality and luxury dining to FMCG, healthcare, and corporate enterprises across South India.
+              Verified track record managing digital growth, organic reach, and paid campaigns for regional & national enterprises across South India.
             </p>
           </div>
 

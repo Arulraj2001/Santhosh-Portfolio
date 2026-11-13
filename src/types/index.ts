@@ -30,6 +30,7 @@ export interface SiteSettings {
   customColors: ThemeColors;
   typographyPreset: string;
   fxSettings: FxSettings;
+  showExperience?: boolean;
 }
 
 export interface Profile {
@@ -65,6 +66,18 @@ export interface Client {
   name: string;
   logoUrl: string;
   category: string;
+  featured: boolean;
+  orderIndex: number;
+}
+
+export interface LiveClient {
+  id: string;
+  name: string;
+  logoUrl: string;
+  category: string;
+  status: string; // e.g. "Active Meta Ads Retainer", "Ongoing Campaign"
+  deliverables?: string;
+  impactMetric?: string;
   featured: boolean;
   orderIndex: number;
 }

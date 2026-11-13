@@ -7,7 +7,18 @@ export function SkillsExperience() {
   const { state } = usePortfolioStore();
   const { experiences, education, skills, settings } = state;
   const primaryColor = settings.customColors.primary;
-  const [activeTab, setActiveTab] = useState<'experience' | 'skills' | 'education'>('experience');
+  const showExperience = settings.showExperience !== false;
+  
+  const [activeTab, setActiveTab] = useState<'experience' | 'skills' | 'education'>(
+    showExperience ? 'experience' : 'skills'
+  );
+
+  // If experience is toggled off, ensure activeTab isn't stuck on experience
+  React.useEffect(() => {
+    if (!showExperience && activeTab === 'experience') {
+      setActiveTab('skills');
+    }
+  }, [showExperience, activeTab]);
 
   const categories = ['All', 'Digital Marketing', 'Tools & Analytics', 'Content & Website'];
   const [selectedSkillCategory, setSelectedSkillCategory] = useState('All');
@@ -29,22 +40,24 @@ export function SkillsExperience() {
               <span>Career Trajectory & Technical Mastery</span>
             </div>
             <h2 className="font-display font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white uppercase">
-              Experience & Skills
+              {showExperience ? 'Experience & Skills' : 'Skills & Technical Mastery'}
             </h2>
           </div>
 
           {/* Tab Selector */}
           <div className="flex items-center p-1 rounded-full bg-[#121216] border border-[#27272A] self-start sm:self-auto">
-            <button
-              onClick={() => setActiveTab('experience')}
-              className={`px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all ${
-                activeTab === 'experience'
-                  ? 'bg-[#18181F] text-white shadow'
-                  : 'text-[#9E9EA7] hover:text-white'
-              }`}
-            >
-              Experience
-            </button>
+            {showExperience && (
+              <button
+                onClick={() => setActiveTab('experience')}
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all ${
+                  activeTab === 'experience'
+                    ? 'bg-[#18181F] text-white shadow'
+                    : 'text-[#9E9EA7] hover:text-white'
+                }`}
+              >
+                Experience
+              </button>
+            )}
             <button
               onClick={() => setActiveTab('skills')}
               className={`px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all ${
@@ -69,7 +82,7 @@ export function SkillsExperience() {
         </div>
 
         {/* Tab 1: Experience */}
-        {activeTab === 'experience' && (
+        {showExperience && activeTab === 'experience' && (
           <div className="space-y-6">
             {experiences.map((exp, idx) => (
               <motion.div

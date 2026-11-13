@@ -3,6 +3,7 @@ import {
   Profile,
   Metric,
   Client,
+  LiveClient,
   Project,
   WorkProcessStep,
   Experience,
@@ -103,7 +104,8 @@ export const initialSiteSettings: SiteSettings = {
     particleDensity: 'medium',
     cardTilt: true,
     marqueeSpeed: 35
-  }
+  },
+  showExperience: true
 };
 
 export const initialProfile: Profile = {
@@ -156,6 +158,42 @@ export const initialClients: Client[] = [
   { id: 'c20', name: 'The Arcadia', logoUrl: '/assets/clients/20.png', category: 'Hospitality & Banquets', featured: true, orderIndex: 19 },
   { id: 'c21', name: 'Vanaalayam Retreat', logoUrl: '/assets/clients/21.png', category: 'Eco Resort & Wellness', featured: true, orderIndex: 20 },
   { id: 'c22', name: 'Cibo Fine Dining', logoUrl: '/assets/clients/22.png', category: 'Culinary Experiences', featured: true, orderIndex: 21 }
+];
+
+export const initialLiveClients: LiveClient[] = [
+  {
+    id: 'lc1',
+    name: 'Salem Horizon Properties',
+    logoUrl: '/assets/clients/14.png',
+    category: 'Real Estate Developer',
+    status: 'Active Meta Ads Retainer',
+    deliverables: 'Laser-Targeted Lead Generation & High-Intent WhatsApp Funnels',
+    impactMetric: '180+ Leads/mo',
+    featured: true,
+    orderIndex: 0
+  },
+  {
+    id: 'lc2',
+    name: 'Vibe Retail & FMCG',
+    logoUrl: '/assets/clients/1.png',
+    category: 'E-Commerce & Retail',
+    status: 'Active Campaign Scaling',
+    deliverables: 'Performance Marketing, Dynamic Creative Testing & Catalog Sales',
+    impactMetric: '5.2x ROAS',
+    featured: true,
+    orderIndex: 1
+  },
+  {
+    id: 'lc3',
+    name: 'The Grand Heritage Stays',
+    logoUrl: '/assets/clients/19.png',
+    category: 'Hospitality & Leisure',
+    status: 'Ongoing Growth Retainer',
+    deliverables: 'Social Media Management, Viral Reels & Direct Booking Conversions',
+    impactMetric: '+240% Reach',
+    featured: true,
+    orderIndex: 2
+  }
 ];
 
 export const initialProjects: Project[] = [

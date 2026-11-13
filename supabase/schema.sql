@@ -58,12 +58,25 @@ CREATE TABLE IF NOT EXISTS metrics (
   order_index INTEGER DEFAULT 0
 );
 
--- 4. Managed Brands / Clients (All 20 Brands)
+-- 4. Managed Brands / Clients (All 22 Worked Brands)
 CREATE TABLE IF NOT EXISTS clients (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   logo_url TEXT NOT NULL,
   category TEXT DEFAULT 'Brand Partner',
+  featured BOOLEAN DEFAULT true,
+  order_index INTEGER DEFAULT 0
+);
+
+-- 4b. Currently Working With Live Clients (Active Retainers)
+CREATE TABLE IF NOT EXISTS live_clients (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  logo_url TEXT NOT NULL,
+  category TEXT DEFAULT 'Brand Partner',
+  status TEXT DEFAULT 'Active Retainer',
+  deliverables TEXT,
+  impact_metric TEXT,
   featured BOOLEAN DEFAULT true,
   order_index INTEGER DEFAULT 0
 );
@@ -142,6 +155,7 @@ ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE profile ENABLE ROW LEVEL SECURITY;
 ALTER TABLE metrics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE clients ENABLE ROW LEVEL SECURITY;
+ALTER TABLE live_clients ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE work_process ENABLE ROW LEVEL SECURITY;
 ALTER TABLE experiences ENABLE ROW LEVEL SECURITY;
@@ -165,6 +179,10 @@ CREATE POLICY "Allow All Access Metrics" ON metrics FOR ALL USING (true) WITH CH
 DROP POLICY IF EXISTS "Public Read Clients" ON clients;
 DROP POLICY IF EXISTS "Admin Full Access Clients" ON clients;
 CREATE POLICY "Allow All Access Clients" ON clients FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public Read Live Clients" ON live_clients;
+DROP POLICY IF EXISTS "Admin Full Access Live Clients" ON live_clients;
+CREATE POLICY "Allow All Access Live Clients" ON live_clients FOR ALL USING (true) WITH CHECK (true);
 
 DROP POLICY IF EXISTS "Public Read Projects" ON projects;
 DROP POLICY IF EXISTS "Admin Full Access Projects" ON projects;
