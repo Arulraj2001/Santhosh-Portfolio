@@ -119,13 +119,13 @@ export function ContactSection() {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-[#9E9EA7] border border-[#27272A] bg-[#121216] mb-3">
                 <Sparkles className="w-3.5 h-3.5" style={{ color: primaryColor }} />
-                <span>Let's Build Something High-Growth</span>
+                <span>{settings.sectionContent?.contactBadge || "Let's Build Something High-Growth"}</span>
               </div>
               <h2 className="font-display font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white uppercase">
-                Let's Work Together
+                {settings.sectionContent?.contactTitle || "Let's Work Together"}
               </h2>
               <p className="text-sm text-[#A1A1AA] mt-3 leading-relaxed">
-                Currently open for performance marketing campaigns, brand scaling, agency retainers, and high-growth opportunities.
+                {settings.sectionContent?.contactSubtitle || 'Currently open for performance marketing campaigns, brand scaling, agency retainers, and high-growth opportunities.'}
               </p>
             </div>
 
@@ -179,7 +179,9 @@ export function ContactSection() {
                   <span className="w-2.5 h-2.5 rounded-full bg-[#F59E0B]" />
                   <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" />
                 </div>
-                <span className="text-[10px] font-mono text-[#9E9EA7]">LIVE AD ENGINE // ROAS: 4.2x</span>
+                <span className="text-[10px] font-mono text-[#9E9EA7]">
+                  {settings.sectionContent?.contactLiveAdLabel || 'LIVE AD ENGINE // ROAS: 4.2x'}
+                </span>
               </div>
 
               {/* Graphic Mockup Area */}

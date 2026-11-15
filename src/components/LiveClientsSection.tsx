@@ -30,14 +30,14 @@ export function LiveClientsSection() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
               </span>
-              <span className="font-semibold">Currently Working With • Live Clients</span>
+              <span className="font-semibold">{settings.sectionContent?.liveClientsBadge || 'Currently Working With • Live Clients'}</span>
             </div>
             
             <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white uppercase">
-              Active Engagements & Retainers
+              {settings.sectionContent?.liveClientsTitle || 'Active Engagements & Retainers'}
             </h2>
             <p className="text-sm text-[#A1A1AA] mt-2 max-w-2xl leading-relaxed">
-              High-growth brands actively scaling performance marketing pipelines, lead funnels, and algorithmic organic reach under Santhosh's management right now.
+              {settings.sectionContent?.liveClientsSubtitle || "High-growth brands actively scaling performance marketing pipelines, lead funnels, and algorithmic organic reach under Santhosh's management right now."}
             </p>
           </div>
 

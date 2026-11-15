@@ -37,10 +37,12 @@ export function SkillsExperience() {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-[#9E9EA7] border border-[#27272A] bg-[#121216] mb-3">
               <Briefcase className="w-3.5 h-3.5" style={{ color: primaryColor }} />
-              <span>Career Trajectory & Technical Mastery</span>
+              <span>{settings.sectionContent?.skillsBadge || 'Career Trajectory & Technical Mastery'}</span>
             </div>
             <h2 className="font-display font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white uppercase">
-              {showExperience ? 'Experience & Skills' : 'Skills & Technical Mastery'}
+              {showExperience
+                ? (settings.sectionContent?.skillsTitle || 'Experience & Skills')
+                : 'Skills & Technical Mastery'}
             </h2>
           </div>
 

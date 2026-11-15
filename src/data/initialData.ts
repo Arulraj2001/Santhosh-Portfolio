@@ -94,6 +94,31 @@ export const THEME_PRESETS: Record<ThemePreset, { name: string; colors: ThemeCol
   }
 };
 
+export const initialSectionContent = {
+  heroBadge: 'Proven Impact',
+  heroCtaPrimary: 'View Selected Work',
+  heroCtaSecondary: 'Work Together',
+  clientsBadge: 'Clients Worked With • Portfolio',
+  clientsTitle: '22+ Brands Worked With & Scaled',
+  clientsSubtitle: 'Verified track record managing digital growth, organic reach, and paid campaigns for regional & national enterprises across South India.',
+  liveClientsBadge: 'Currently Working With • Live Clients',
+  liveClientsTitle: 'Active Engagements & Retainers',
+  liveClientsSubtitle: "High-growth brands actively scaling performance marketing pipelines, lead funnels, and algorithmic organic reach under Santhosh's management right now.",
+  projectsBadge: 'Proven Conversion Results',
+  projectsTitle: 'Selected Case Studies',
+  processBadge: 'Strategic Execution',
+  processTitle: 'Work Process',
+  processSubtitle: 'A disciplined, data-first roadmap refined across 100+ paid advertising campaigns and 20 multi-industry brands.',
+  processQuote: "Data-driven marketing isn't just about spending budget — it's about engineering predictable, scalable revenue.",
+  processQuoteAuthor: 'Santhosh S',
+  skillsBadge: 'Career Trajectory & Technical Mastery',
+  skillsTitle: 'Experience & Skills',
+  contactBadge: "Let's Build Something High-Growth",
+  contactTitle: "Let's Work Together",
+  contactSubtitle: 'Currently open for performance marketing campaigns, brand scaling, agency retainers, and high-growth opportunities.',
+  contactLiveAdLabel: 'LIVE AD ENGINE // ROAS: 4.2x'
+};
+
 export const initialSiteSettings: SiteSettings = {
   id: 'current_settings',
   activeTheme: 'crimson-noir',
@@ -106,7 +131,8 @@ export const initialSiteSettings: SiteSettings = {
     marqueeSpeed: 35
   },
   showExperience: true,
-  showLiveClients: true
+  showLiveClients: true,
+  sectionContent: initialSectionContent
 };
 
 export const initialProfile: Profile = {

@@ -26,13 +26,13 @@ export function WorkProcess() {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-[#9E9EA7] border border-[#27272A] bg-[#121216] mb-3">
                 <Sparkles className="w-3.5 h-3.5" style={{ color: primaryColor }} />
-                <span>Strategic Execution</span>
+                <span>{settings.sectionContent?.processBadge || 'Strategic Execution'}</span>
               </div>
               <h2 className="font-display font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white uppercase">
-                Work Process
+                {settings.sectionContent?.processTitle || 'Work Process'}
               </h2>
               <p className="text-sm text-[#A1A1AA] mt-2 max-w-lg">
-                A disciplined, data-first roadmap refined across 100+ paid advertising campaigns and 20 multi-industry brands.
+                {settings.sectionContent?.processSubtitle || 'A disciplined, data-first roadmap refined across 100+ paid advertising campaigns and 20 multi-industry brands.'}
               </p>
             </div>
 
@@ -96,16 +96,16 @@ export function WorkProcess() {
 
               <div className="space-y-6 relative z-10">
                 <blockquote className="font-display font-semibold text-2xl sm:text-3xl leading-snug tracking-tight text-white/95">
-                  “Data-driven marketing isn't just about spending budget — it's about engineering predictable, scalable revenue.”
+                  “{settings.sectionContent?.processQuote || "Data-driven marketing isn't just about spending budget — it's about engineering predictable, scalable revenue."}”
                 </blockquote>
 
                 <div className="pt-6 border-t border-white/20 flex items-center justify-between">
                   <div>
                     <p className="font-serif italic text-2xl text-white tracking-wide">
-                      {profile.name}
+                      {settings.sectionContent?.processQuoteAuthor || profile.name}
                     </p>
                     <p className="text-xs font-mono uppercase tracking-widest text-white/70 mt-1">
-                      Digital Marketing Strategist
+                      {profile.title || 'Digital Marketing Strategist'}
                     </p>
                   </div>
 

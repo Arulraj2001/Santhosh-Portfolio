@@ -19,10 +19,10 @@ export function CaseStudies() {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-[#9E9EA7] border border-[#27272A] bg-[#121216] mb-3">
               <Layers className="w-3.5 h-3.5" style={{ color: primaryColor }} />
-              <span>Proven Conversion Results</span>
+              <span>{settings.sectionContent?.projectsBadge || 'Proven Conversion Results'}</span>
             </div>
             <h2 className="font-display font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white uppercase">
-              Selected Case Studies
+              {settings.sectionContent?.projectsTitle || 'Selected Case Studies'}
             </h2>
           </div>
 

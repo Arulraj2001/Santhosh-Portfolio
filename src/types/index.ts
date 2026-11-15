@@ -24,6 +24,31 @@ export interface FxSettings {
   marqueeSpeed: number;
 }
 
+export interface SectionContent {
+  heroBadge?: string;
+  heroCtaPrimary?: string;
+  heroCtaSecondary?: string;
+  clientsBadge?: string;
+  clientsTitle?: string;
+  clientsSubtitle?: string;
+  liveClientsBadge?: string;
+  liveClientsTitle?: string;
+  liveClientsSubtitle?: string;
+  projectsBadge?: string;
+  projectsTitle?: string;
+  processBadge?: string;
+  processTitle?: string;
+  processSubtitle?: string;
+  processQuote?: string;
+  processQuoteAuthor?: string;
+  skillsBadge?: string;
+  skillsTitle?: string;
+  contactBadge?: string;
+  contactTitle?: string;
+  contactSubtitle?: string;
+  contactLiveAdLabel?: string;
+}
+
 export interface SiteSettings {
   id: string;
   activeTheme: ThemePreset;
@@ -32,6 +57,7 @@ export interface SiteSettings {
   fxSettings: FxSettings;
   showExperience?: boolean;
   showLiveClients?: boolean;
+  sectionContent?: SectionContent;
 }
 
 export interface Profile {

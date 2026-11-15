@@ -50,7 +50,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
   const primaryColor = state.settings.customColors.primary;
 
   const [activeTab, setActiveTab] = useState<
-    'theme' | 'profile' | 'clients' | 'live-clients' | 'projects' | 'experience' | 'skills' | 'process' | 'inquiries' | 'supabase'
+    'theme' | 'profile' | 'copy' | 'clients' | 'live-clients' | 'projects' | 'experience' | 'skills' | 'process' | 'inquiries' | 'supabase'
   >('theme');
 
   // Supabase state
@@ -213,7 +213,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
   };
 
   const handleDeleteClient = (id: string) => {
-    store.updateClients(state.clients.filter((c) => c.id !== id));
+    store.deleteClient(id);
   };
 
   // LIVE CLIENT CRUD (Active Partnerships)
@@ -242,7 +242,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
   };
 
   const handleDeleteLiveClient = (id: string) => {
-    store.updateLiveClients((state.liveClients || []).filter((lc) => lc.id !== id));
+    store.deleteLiveClient(id);
   };
 
   // PROJECT CRUD
@@ -287,7 +287,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
   };
 
   const handleDeleteProject = (id: string) => {
-    store.updateProjects(state.projects.filter((p) => p.id !== id));
+    store.deleteProject(id);
   };
 
   // EXPERIENCE CRUD
@@ -307,7 +307,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
   };
 
   const handleDeleteExperience = (id: string) => {
-    store.updateExperiences(state.experiences.filter((e) => e.id !== id));
+    store.deleteExperience(id);
   };
 
   // EDUCATION CRUD
@@ -327,7 +327,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
   };
 
   const handleDeleteEducation = (id: string) => {
-    store.updateEducation(state.education.filter((e) => e.id !== id));
+    store.deleteEducation(id);
   };
 
   // SKILLS CRUD
@@ -345,7 +345,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
   };
 
   const handleDeleteSkill = (id: string) => {
-    store.updateSkills(state.skills.filter((s) => s.id !== id));
+    store.deleteSkill(id);
   };
 
   return (
@@ -397,6 +397,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
           {[
             { id: 'theme', label: 'Theme & Colors', icon: <Palette className="w-3.5 h-3.5" /> },
             { id: 'profile', label: 'Profile & Metrics', icon: <User className="w-3.5 h-3.5" /> },
+            { id: 'copy', label: 'Headlines & Quotes', icon: <Sparkles className="w-3.5 h-3.5" /> },
             { id: 'clients', label: `Worked Clients (${state.clients.length})`, icon: <Building2 className="w-3.5 h-3.5" /> },
             { id: 'live-clients', label: `Live Clients (${(state.liveClients || []).length})`, icon: <Radio className="w-3.5 h-3.5 text-emerald-400" /> },
             { id: 'projects', label: `Case Studies (${state.projects.length})`, icon: <FolderKanban className="w-3.5 h-3.5" /> },
@@ -837,7 +838,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
                         <span className="text-[10px] font-mono uppercase text-[#9E9EA7]">Card 0{idx + 1}</span>
                         {state.metrics.length > 1 && (
                           <button
-                            onClick={() => store.updateMetrics(state.metrics.filter((x) => x.id !== m.id))}
+                            onClick={() => store.deleteMetric(m.id)}
                             className="p-1 rounded bg-red-500/20 text-red-400 hover:bg-red-500/30"
                             title="Delete Metric"
                           >
@@ -882,6 +883,281 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
                       />
                     </div>
                   ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 2.5: HEADLINES & SECTION COPY CMS */}
+          {activeTab === 'copy' && (
+            <div className="space-y-8 max-w-4xl">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-widest border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 mb-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                  <span>Zero-Code Dynamic Copy Management</span>
+                </div>
+                <h3 className="font-display font-bold text-lg text-white">
+                  Headlines, Badges, Quotes & CTAs
+                </h3>
+                <p className="text-xs text-[#A1A1AA]">
+                  Customize every headline, badge, subtitle, and quote across the public portfolio without touching code.
+                </p>
+              </div>
+
+              {/* 1. Work Process Quote Card */}
+              <div className="p-5 rounded-2xl bg-[#121216] border border-[#27272A] space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="font-display font-bold text-sm text-white">1. Work Process Signature Philosophy Quote</span>
+                  <span className="text-[10px] font-mono text-[#9E9EA7]">Featured in Process Section</span>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Quote Text</label>
+                  <textarea
+                    rows={2}
+                    value={state.settings.sectionContent?.processQuote || ''}
+                    onChange={(e) => store.updateSectionContent({ processQuote: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs resize-none"
+                    placeholder="Enter your signature quote..."
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Author Name</label>
+                  <input
+                    type="text"
+                    value={state.settings.sectionContent?.processQuoteAuthor || ''}
+                    onChange={(e) => store.updateSectionContent({ processQuoteAuthor: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                    placeholder="e.g. Santhosh S"
+                  />
+                </div>
+              </div>
+
+              {/* 2. Hero Section Headlines */}
+              <div className="p-5 rounded-2xl bg-[#121216] border border-[#27272A] space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="font-display font-bold text-sm text-white">2. Hero Section Badges & Buttons</span>
+                  <span className="text-[10px] font-mono text-[#9E9EA7]">Top of Page</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Right Column Badge</label>
+                    <input
+                      type="text"
+                      value={state.settings.sectionContent?.heroBadge || ''}
+                      onChange={(e) => store.updateSectionContent({ heroBadge: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                      placeholder="e.g. Proven Impact"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Primary CTA Button</label>
+                    <input
+                      type="text"
+                      value={state.settings.sectionContent?.heroCtaPrimary || ''}
+                      onChange={(e) => store.updateSectionContent({ heroCtaPrimary: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                      placeholder="e.g. View Selected Work"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Secondary CTA Button</label>
+                    <input
+                      type="text"
+                      value={state.settings.sectionContent?.heroCtaSecondary || ''}
+                      onChange={(e) => store.updateSectionContent({ heroCtaSecondary: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                      placeholder="e.g. Work Together"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 3. Clients Worked With Section Headlines */}
+              <div className="p-5 rounded-2xl bg-[#121216] border border-[#27272A] space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="font-display font-bold text-sm text-white">3. Worked Clients Marquee Headlines</span>
+                  <span className="text-[10px] font-mono text-[#9E9EA7]">Brand Marquee</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Badge</label>
+                    <input
+                      type="text"
+                      value={state.settings.sectionContent?.clientsBadge || ''}
+                      onChange={(e) => store.updateSectionContent({ clientsBadge: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                      placeholder="e.g. Clients Worked With • Portfolio"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Main Heading</label>
+                    <input
+                      type="text"
+                      value={state.settings.sectionContent?.clientsTitle || ''}
+                      onChange={(e) => store.updateSectionContent({ clientsTitle: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                      placeholder="e.g. 22+ Brands Worked With & Scaled"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Subtitle / Description</label>
+                  <input
+                    type="text"
+                    value={state.settings.sectionContent?.clientsSubtitle || ''}
+                    onChange={(e) => store.updateSectionContent({ clientsSubtitle: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                    placeholder="Enter descriptive subtitle..."
+                  />
+                </div>
+              </div>
+
+              {/* 4. Live Clients Section Headlines */}
+              <div className="p-5 rounded-2xl bg-[#121216] border border-[#27272A] space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="font-display font-bold text-sm text-white">4. Currently Working With (Live Clients) Headlines</span>
+                  <span className="text-[10px] font-mono text-[#9E9EA7]">Beacon Section</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Badge</label>
+                    <input
+                      type="text"
+                      value={state.settings.sectionContent?.liveClientsBadge || ''}
+                      onChange={(e) => store.updateSectionContent({ liveClientsBadge: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                      placeholder="e.g. Currently Working With • Live Clients"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Main Heading</label>
+                    <input
+                      type="text"
+                      value={state.settings.sectionContent?.liveClientsTitle || ''}
+                      onChange={(e) => store.updateSectionContent({ liveClientsTitle: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                      placeholder="e.g. Active Engagements & Retainers"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Subtitle / Description</label>
+                  <input
+                    type="text"
+                    value={state.settings.sectionContent?.liveClientsSubtitle || ''}
+                    onChange={(e) => store.updateSectionContent({ liveClientsSubtitle: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                    placeholder="Enter descriptive subtitle..."
+                  />
+                </div>
+              </div>
+
+              {/* 5. Case Studies & Process Section Headlines */}
+              <div className="p-5 rounded-2xl bg-[#121216] border border-[#27272A] space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="font-display font-bold text-sm text-white">5. Case Studies & Process Headlines</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Case Studies Badge</label>
+                    <input
+                      type="text"
+                      value={state.settings.sectionContent?.projectsBadge || ''}
+                      onChange={(e) => store.updateSectionContent({ projectsBadge: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                      placeholder="e.g. Proven Conversion Results"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Case Studies Title</label>
+                    <input
+                      type="text"
+                      value={state.settings.sectionContent?.projectsTitle || ''}
+                      onChange={(e) => store.updateSectionContent({ projectsTitle: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                      placeholder="e.g. Selected Case Studies"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Work Process Badge</label>
+                    <input
+                      type="text"
+                      value={state.settings.sectionContent?.processBadge || ''}
+                      onChange={(e) => store.updateSectionContent({ processBadge: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                      placeholder="e.g. Strategic Execution"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Work Process Title</label>
+                    <input
+                      type="text"
+                      value={state.settings.sectionContent?.processTitle || ''}
+                      onChange={(e) => store.updateSectionContent({ processTitle: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                      placeholder="e.g. Work Process"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Work Process Subtitle</label>
+                  <input
+                    type="text"
+                    value={state.settings.sectionContent?.processSubtitle || ''}
+                    onChange={(e) => store.updateSectionContent({ processSubtitle: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                    placeholder="Enter work process description..."
+                  />
+                </div>
+              </div>
+
+              {/* 6. Contact Section Headlines */}
+              <div className="p-5 rounded-2xl bg-[#121216] border border-[#27272A] space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="font-display font-bold text-sm text-white">6. Contact Section Headlines</span>
+                  <span className="text-[10px] font-mono text-[#9E9EA7]">Bottom Lead Capture</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Contact Badge</label>
+                    <input
+                      type="text"
+                      value={state.settings.sectionContent?.contactBadge || ''}
+                      onChange={(e) => store.updateSectionContent({ contactBadge: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                      placeholder="e.g. Let's Build Something High-Growth"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Contact Title</label>
+                    <input
+                      type="text"
+                      value={state.settings.sectionContent?.contactTitle || ''}
+                      onChange={(e) => store.updateSectionContent({ contactTitle: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                      placeholder="e.g. Let's Work Together"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Contact Subtitle</label>
+                  <input
+                    type="text"
+                    value={state.settings.sectionContent?.contactSubtitle || ''}
+                    onChange={(e) => store.updateSectionContent({ contactSubtitle: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                    placeholder="Enter contact subtitle..."
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Live Ad Radar Label</label>
+                  <input
+                    type="text"
+                    value={state.settings.sectionContent?.contactLiveAdLabel || ''}
+                    onChange={(e) => store.updateSectionContent({ contactLiveAdLabel: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                    placeholder="e.g. LIVE AD ENGINE // ROAS: 4.2x"
+                  />
                 </div>
               </div>
             </div>
@@ -1759,6 +2035,34 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
           {/* TAB 7: 5-STAGE PROCESS CMS */}
           {activeTab === 'process' && (
             <div className="space-y-6 max-w-4xl">
+              {/* Signature Philosophy Quote Card */}
+              <div className="p-5 rounded-2xl bg-[#121216] border border-[#27272A] space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-display font-bold text-sm text-white">Signature Philosophy Quote (Side Card)</span>
+                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Zero-Code Sync</span>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Quote Text</label>
+                  <textarea
+                    rows={2}
+                    value={state.settings.sectionContent?.processQuote || ''}
+                    onChange={(e) => store.updateSectionContent({ processQuote: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs resize-none"
+                    placeholder="Enter your philosophy quote..."
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-mono uppercase text-[#9E9EA7] mb-1">Quote Author</label>
+                  <input
+                    type="text"
+                    value={state.settings.sectionContent?.processQuoteAuthor || ''}
+                    onChange={(e) => store.updateSectionContent({ processQuoteAuthor: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-[#18181F] border border-[#27272A] text-white text-xs"
+                    placeholder="e.g. Santhosh S"
+                  />
+                </div>
+              </div>
+
               <div className="flex items-center justify-between">
                 <h3 className="font-display font-bold text-lg text-white">
                   5-Stage Work Process Roadmap
@@ -1811,9 +2115,7 @@ export function AdminDashboard({ isOpen, onClose }: AdminDashboardProps) {
                       </div>
                       {state.workProcess.length > 1 && (
                         <button
-                          onClick={() =>
-                            store.updateWorkProcess(state.workProcess.filter((s) => s.id !== step.id))
-                          }
+                          onClick={() => store.deleteWorkProcess(step.id)}
                           className="p-1.5 rounded bg-red-500/20 text-red-400 hover:bg-red-500/30 ml-2"
                         >
                           <Trash2 className="w-3.5 h-3.5" />

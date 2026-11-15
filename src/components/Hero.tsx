@@ -108,7 +108,7 @@ export function Hero() {
                 className="px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider text-white shadow-xl flex items-center gap-2 transition-all hover:brightness-110 active:scale-95"
                 style={{ backgroundColor: primaryColor }}
               >
-                <span>View Selected Work</span>
+                <span>{settings.sectionContent?.heroCtaPrimary || 'View Selected Work'}</span>
                 <ArrowUpRight className="w-4 h-4" />
               </a>
 
@@ -116,7 +116,7 @@ export function Hero() {
                 href="#contact"
                 className="px-6 py-3 rounded-full text-xs font-medium uppercase tracking-wider text-[#FAFAFA] border border-[#27272A] bg-[#121216]/80 hover:bg-[#18181F] hover:border-[#3F3F46] transition-all"
               >
-                <span>Work Together</span>
+                <span>{settings.sectionContent?.heroCtaSecondary || 'Work Together'}</span>
               </a>
             </div>
           </motion.div>
@@ -165,7 +165,7 @@ export function Hero() {
             <div className="flex items-center gap-2 mb-2">
               <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: primaryColor }} />
               <p className="text-[11px] font-mono uppercase tracking-widest text-[#9E9EA7]">
-                Proven Impact
+                {settings.sectionContent?.heroBadge || 'Proven Impact'}
               </p>
             </div>
 

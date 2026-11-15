@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   SiteSettings,
+  SectionContent,
   Profile,
   Metric,
   Client,
@@ -16,6 +17,7 @@ import {
 } from '../types';
 import {
   initialSiteSettings,
+  initialSectionContent,
   initialProfile,
   initialMetrics,
   initialClients,
@@ -67,61 +69,41 @@ function getInitialState(): AppState {
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
-      const profile = parsed.profile || initialProfile;
-      // Auto-migrate legacy avatar URLs to the user's transparent cutout santhosh1.png
-      if (
-        profile.avatarUrl === '/assets/santhosh.jpg' ||
-        profile.avatarUrl === '/assets/santhosh-seamless.png' ||
-        !profile.avatarUrl
-      ) {
-        profile.avatarUrl = '/assets/santhosh1.png';
-      }
-
-      // Ensure socialLinks has full default fallback so links always work
-      profile.socialLinks = {
-        linkedin: profile.socialLinks?.linkedin || 'https://linkedin.com',
-        instagram: profile.socialLinks?.instagram || 'https://instagram.com',
-        youtube: profile.socialLinks?.youtube || 'https://youtube.com',
-        facebook: profile.socialLinks?.facebook || 'https://facebook.com',
-        whatsapp: profile.socialLinks?.whatsapp || 'https://wa.me/919597193371',
-        ...profile.socialLinks
+      const profile: Profile = {
+        ...initialProfile,
+        ...(parsed.profile || {}),
+        socialLinks: {
+          linkedin: parsed.profile?.socialLinks?.linkedin || initialProfile.socialLinks?.linkedin || 'https://linkedin.com',
+          instagram: parsed.profile?.socialLinks?.instagram || initialProfile.socialLinks?.instagram || 'https://instagram.com',
+          youtube: parsed.profile?.socialLinks?.youtube || initialProfile.socialLinks?.youtube || 'https://youtube.com',
+          facebook: parsed.profile?.socialLinks?.facebook || initialProfile.socialLinks?.facebook || 'https://facebook.com',
+          whatsapp: parsed.profile?.socialLinks?.whatsapp || initialProfile.socialLinks?.whatsapp || 'https://wa.me/919597193371'
+        }
       };
-
-      // Auto-migrate clients if legacy logos (named after old files) or count mismatch exist
-      let clients = parsed.clients || initialClients;
-      const hasOldLogo = clients.some((c: any) =>
-        c.logoUrl && (
-          c.logoUrl.includes('tarani-soaps') ||
-          c.logoUrl.includes('siruvaani') ||
-          c.logoUrl.includes('mayil-mark') ||
-          c.logoUrl.includes('cibo') ||
-          c.logoUrl.includes('the-zen-park') ||
-          c.logoUrl.includes('hotel-chenthur-park')
-        )
-      );
-      if (hasOldLogo || !clients || clients.length < 22) {
-        clients = initialClients;
-      }
 
       const settings: SiteSettings = {
         ...initialSiteSettings,
         ...(parsed.settings || {}),
         showExperience: parsed.settings?.showExperience !== undefined ? parsed.settings.showExperience : true,
-        showLiveClients: parsed.settings?.showLiveClients !== undefined ? parsed.settings.showLiveClients : true
+        showLiveClients: parsed.settings?.showLiveClients !== undefined ? parsed.settings.showLiveClients : true,
+        sectionContent: {
+          ...initialSectionContent,
+          ...(parsed.settings?.sectionContent || {})
+        }
       };
 
       return {
         settings,
         profile,
-        metrics: parsed.metrics || initialMetrics,
-        clients,
-        liveClients: parsed.liveClients || initialLiveClients,
-        projects: parsed.projects || initialProjects,
-        workProcess: parsed.workProcess || initialWorkProcess,
-        experiences: parsed.experiences || initialExperiences,
-        education: parsed.education || initialEducation,
-        skills: parsed.skills || initialSkills,
-        inquiries: parsed.inquiries || []
+        metrics: Array.isArray(parsed.metrics) ? parsed.metrics : initialMetrics,
+        clients: Array.isArray(parsed.clients) ? parsed.clients : initialClients,
+        liveClients: Array.isArray(parsed.liveClients) ? parsed.liveClients : initialLiveClients,
+        projects: Array.isArray(parsed.projects) ? parsed.projects : initialProjects,
+        workProcess: Array.isArray(parsed.workProcess) ? parsed.workProcess : initialWorkProcess,
+        experiences: Array.isArray(parsed.experiences) ? parsed.experiences : initialExperiences,
+        education: Array.isArray(parsed.education) ? parsed.education : initialEducation,
+        skills: Array.isArray(parsed.skills) ? parsed.skills : initialSkills,
+        inquiries: Array.isArray(parsed.inquiries) ? parsed.inquiries : []
       };
     } catch (e) {
       console.error('Failed to parse cached state:', e);
@@ -249,6 +231,18 @@ export function usePortfolioStore() {
       notify();
       syncSettingToSupabase();
     },
+    updateSectionContent: (content: Partial<SectionContent>) => {
+      currentState.settings = {
+        ...currentState.settings,
+        sectionContent: {
+          ...initialSectionContent,
+          ...(currentState.settings.sectionContent || {}),
+          ...content
+        }
+      };
+      notify();
+      syncSettingToSupabase();
+    },
     updateProfile: (profile: Partial<Profile>) => {
       currentState.profile = {
         ...currentState.profile,
@@ -262,40 +256,137 @@ export function usePortfolioStore() {
       notify();
       syncProjectsToSupabase();
     },
+    deleteProject: async (id: string) => {
+      currentState.projects = currentState.projects.filter((p) => p.id !== id);
+      notify();
+      const client = getSupabaseClient();
+      if (client && isValidUUID(id)) {
+        try {
+          await client.from('projects').delete().eq('id', id);
+        } catch (e) {
+          console.warn('Failed to delete project from Supabase:', e);
+        }
+      }
+    },
     updateClients: (clients: Client[]) => {
       currentState.clients = [...clients];
       notify();
       syncClientsToSupabase();
+    },
+    deleteClient: async (id: string) => {
+      currentState.clients = currentState.clients.filter((c) => c.id !== id);
+      notify();
+      const client = getSupabaseClient();
+      if (client && isValidUUID(id)) {
+        try {
+          await client.from('clients').delete().eq('id', id);
+        } catch (e) {
+          console.warn('Failed to delete client from Supabase:', e);
+        }
+      }
     },
     updateLiveClients: (liveClients: LiveClient[]) => {
       currentState.liveClients = [...liveClients];
       notify();
       syncLiveClientsToSupabase();
     },
+    deleteLiveClient: async (id: string) => {
+      currentState.liveClients = currentState.liveClients.filter((lc) => lc.id !== id);
+      notify();
+      syncLiveClientsToSupabase();
+      const client = getSupabaseClient();
+      if (client && isValidUUID(id)) {
+        try {
+          await client.from('live_clients').delete().eq('id', id);
+        } catch (e) {
+          console.warn('Failed to delete live client from Supabase:', e);
+        }
+      }
+    },
     updateMetrics: (metrics: Metric[]) => {
       currentState.metrics = [...metrics];
       notify();
       syncMetricsToSupabase();
+    },
+    deleteMetric: async (id: string) => {
+      currentState.metrics = currentState.metrics.filter((m) => m.id !== id);
+      notify();
+      const client = getSupabaseClient();
+      if (client && isValidUUID(id)) {
+        try {
+          await client.from('metrics').delete().eq('id', id);
+        } catch (e) {
+          console.warn('Failed to delete metric from Supabase:', e);
+        }
+      }
     },
     updateWorkProcess: (steps: WorkProcessStep[]) => {
       currentState.workProcess = [...steps];
       notify();
       syncWorkProcessToSupabase();
     },
+    deleteWorkProcess: async (id: string) => {
+      currentState.workProcess = currentState.workProcess.filter((wp) => wp.id !== id);
+      notify();
+      const client = getSupabaseClient();
+      if (client && isValidUUID(id)) {
+        try {
+          await client.from('work_process').delete().eq('id', id);
+        } catch (e) {
+          console.warn('Failed to delete work process step from Supabase:', e);
+        }
+      }
+    },
     updateExperiences: (exps: Experience[]) => {
       currentState.experiences = [...exps];
       notify();
       syncExperiencesToSupabase();
+    },
+    deleteExperience: async (id: string) => {
+      currentState.experiences = currentState.experiences.filter((e) => e.id !== id);
+      notify();
+      const client = getSupabaseClient();
+      if (client && isValidUUID(id)) {
+        try {
+          await client.from('experiences').delete().eq('id', id);
+        } catch (e) {
+          console.warn('Failed to delete experience from Supabase:', e);
+        }
+      }
     },
     updateEducation: (edu: Education[]) => {
       currentState.education = [...edu];
       notify();
       syncEducationToSupabase();
     },
+    deleteEducation: async (id: string) => {
+      currentState.education = currentState.education.filter((ed) => ed.id !== id);
+      notify();
+      const client = getSupabaseClient();
+      if (client && isValidUUID(id)) {
+        try {
+          await client.from('education').delete().eq('id', id);
+        } catch (e) {
+          console.warn('Failed to delete education from Supabase:', e);
+        }
+      }
+    },
     updateSkills: (skills: Skill[]) => {
       currentState.skills = [...skills];
       notify();
       syncSkillsToSupabase();
+    },
+    deleteSkill: async (id: string) => {
+      currentState.skills = currentState.skills.filter((s) => s.id !== id);
+      notify();
+      const client = getSupabaseClient();
+      if (client && isValidUUID(id)) {
+        try {
+          await client.from('skills').delete().eq('id', id);
+        } catch (e) {
+          console.warn('Failed to delete skill from Supabase:', e);
+        }
+      }
     },
     addInquiry: async (inquiryData: Omit<Inquiry, 'id' | 'createdAt' | 'status'>) => {
       const newInquiry: Inquiry = {
@@ -362,15 +453,15 @@ export function usePortfolioStore() {
         currentState = {
           settings: parsed.settings || currentState.settings,
           profile: parsed.profile || currentState.profile,
-          metrics: parsed.metrics || currentState.metrics,
-          clients: parsed.clients || currentState.clients,
-          liveClients: parsed.liveClients || currentState.liveClients,
-          projects: parsed.projects || currentState.projects,
-          workProcess: parsed.workProcess || currentState.workProcess,
-          experiences: parsed.experiences || currentState.experiences,
-          education: parsed.education || currentState.education,
-          skills: parsed.skills || currentState.skills,
-          inquiries: parsed.inquiries || currentState.inquiries
+          metrics: Array.isArray(parsed.metrics) ? parsed.metrics : currentState.metrics,
+          clients: Array.isArray(parsed.clients) ? parsed.clients : currentState.clients,
+          liveClients: Array.isArray(parsed.liveClients) ? parsed.liveClients : currentState.liveClients,
+          projects: Array.isArray(parsed.projects) ? parsed.projects : currentState.projects,
+          workProcess: Array.isArray(parsed.workProcess) ? parsed.workProcess : currentState.workProcess,
+          experiences: Array.isArray(parsed.experiences) ? parsed.experiences : currentState.experiences,
+          education: Array.isArray(parsed.education) ? parsed.education : currentState.education,
+          skills: Array.isArray(parsed.skills) ? parsed.skills : currentState.skills,
+          inquiries: Array.isArray(parsed.inquiries) ? parsed.inquiries : currentState.inquiries
         };
         notify();
         uploadAllToSupabase();
@@ -419,7 +510,11 @@ export async function fetchFromSupabase() {
           : (currentState.settings.showExperience ?? true),
         showLiveClients: settingsData.fx_settings?.showLiveClients !== undefined
           ? settingsData.fx_settings.showLiveClients
-          : (currentState.settings.showLiveClients ?? true)
+          : (currentState.settings.showLiveClients ?? true),
+        sectionContent: {
+          ...initialSectionContent,
+          ...(settingsData.fx_settings?.sectionContent || {})
+        }
       };
 
       if (Array.isArray(settingsData.fx_settings?.liveClients) && settingsData.fx_settings.liveClients.length > 0) {
@@ -448,26 +543,14 @@ export async function fetchFromSupabase() {
     // 3. Clients (Worked Clients)
     const { data: clientsData } = await client.from('clients').select('*').order('order_index');
     if (clientsData && clientsData.length > 0) {
-      const hasOldLogo = clientsData.some((c: any) =>
-        c.logo_url && (
-          c.logo_url.includes('tarani-soaps') ||
-          c.logo_url.includes('siruvaani') ||
-          c.logo_url.includes('mayil-mark') ||
-          c.logo_url.includes('cibo') ||
-          c.logo_url.includes('the-zen-park') ||
-          c.logo_url.includes('hotel-chenthur-park')
-        )
-      );
-      if (!hasOldLogo) {
-        currentState.clients = clientsData.map((c: any) => ({
-          id: c.id,
-          name: c.name,
-          logoUrl: c.logo_url,
-          category: c.category,
-          featured: c.featured,
-          orderIndex: c.order_index
-        }));
-      }
+      currentState.clients = clientsData.map((c: any) => ({
+        id: c.id,
+        name: c.name,
+        logoUrl: c.logo_url,
+        category: c.category,
+        featured: c.featured,
+        orderIndex: c.order_index
+      }));
     }
 
     // 4. Live Clients (table or fxSettings fallback)
@@ -609,6 +692,7 @@ export async function syncSettingToSupabase() {
         ...currentState.settings.fxSettings,
         showExperience: currentState.settings.showExperience !== false,
         showLiveClients: currentState.settings.showLiveClients !== false,
+        sectionContent: currentState.settings.sectionContent || initialSectionContent,
         liveClients: currentState.liveClients
       },
       updated_at: new Date().toISOString()
@@ -647,6 +731,16 @@ export async function syncClientsToSupabase() {
   if (!client) return;
 
   try {
+    // Reconcile deletions
+    const activeIds = currentState.clients.map((c) => c.id).filter(isValidUUID);
+    const { data: existing } = await client.from('clients').select('id');
+    if (existing && existing.length > 0) {
+      const orphaned = existing.map((r: any) => r.id).filter((id: string) => !activeIds.includes(id));
+      if (orphaned.length > 0) {
+        await client.from('clients').delete().in('id', orphaned);
+      }
+    }
+
     for (const c of currentState.clients) {
       const rowId = isValidUUID(c.id) ? c.id : generateUUID();
       c.id = rowId;
@@ -671,8 +765,16 @@ export async function syncLiveClientsToSupabase() {
   const client = getSupabaseClient();
   if (!client) return;
 
-  // Also attempt sync to live_clients table if available
   try {
+    const activeIds = currentState.liveClients.map((lc) => lc.id).filter(isValidUUID);
+    const { data: existing } = await client.from('live_clients').select('id');
+    if (existing && existing.length > 0) {
+      const orphaned = existing.map((r: any) => r.id).filter((id: string) => !activeIds.includes(id));
+      if (orphaned.length > 0) {
+        await client.from('live_clients').delete().in('id', orphaned);
+      }
+    }
+
     for (const lc of currentState.liveClients) {
       const rowId = isValidUUID(lc.id) ? lc.id : generateUUID();
       lc.id = rowId;
@@ -698,6 +800,15 @@ export async function syncProjectsToSupabase() {
   if (!client) return;
 
   try {
+    const activeIds = currentState.projects.map((p) => p.id).filter(isValidUUID);
+    const { data: existing } = await client.from('projects').select('id');
+    if (existing && existing.length > 0) {
+      const orphaned = existing.map((r: any) => r.id).filter((id: string) => !activeIds.includes(id));
+      if (orphaned.length > 0) {
+        await client.from('projects').delete().in('id', orphaned);
+      }
+    }
+
     for (const p of currentState.projects) {
       const rowId = isValidUUID(p.id) ? p.id : generateUUID();
       p.id = rowId;
@@ -725,6 +836,15 @@ export async function syncMetricsToSupabase() {
   if (!client) return;
 
   try {
+    const activeIds = currentState.metrics.map((m) => m.id).filter(isValidUUID);
+    const { data: existing } = await client.from('metrics').select('id');
+    if (existing && existing.length > 0) {
+      const orphaned = existing.map((r: any) => r.id).filter((id: string) => !activeIds.includes(id));
+      if (orphaned.length > 0) {
+        await client.from('metrics').delete().in('id', orphaned);
+      }
+    }
+
     for (const m of currentState.metrics) {
       const rowId = isValidUUID(m.id) ? m.id : generateUUID();
       m.id = rowId;
@@ -746,6 +866,15 @@ export async function syncWorkProcessToSupabase() {
   if (!client) return;
 
   try {
+    const activeIds = currentState.workProcess.map((wp) => wp.id).filter(isValidUUID);
+    const { data: existing } = await client.from('work_process').select('id');
+    if (existing && existing.length > 0) {
+      const orphaned = existing.map((r: any) => r.id).filter((id: string) => !activeIds.includes(id));
+      if (orphaned.length > 0) {
+        await client.from('work_process').delete().in('id', orphaned);
+      }
+    }
+
     for (const wp of currentState.workProcess) {
       const rowId = isValidUUID(wp.id) ? wp.id : generateUUID();
       wp.id = rowId;
@@ -768,6 +897,15 @@ export async function syncExperiencesToSupabase() {
   if (!client) return;
 
   try {
+    const activeIds = currentState.experiences.map((exp) => exp.id).filter(isValidUUID);
+    const { data: existing } = await client.from('experiences').select('id');
+    if (existing && existing.length > 0) {
+      const orphaned = existing.map((r: any) => r.id).filter((id: string) => !activeIds.includes(id));
+      if (orphaned.length > 0) {
+        await client.from('experiences').delete().in('id', orphaned);
+      }
+    }
+
     for (const exp of currentState.experiences) {
       const rowId = isValidUUID(exp.id) ? exp.id : generateUUID();
       exp.id = rowId;
@@ -791,6 +929,15 @@ export async function syncEducationToSupabase() {
   if (!client) return;
 
   try {
+    const activeIds = currentState.education.map((edu) => edu.id).filter(isValidUUID);
+    const { data: existing } = await client.from('education').select('id');
+    if (existing && existing.length > 0) {
+      const orphaned = existing.map((r: any) => r.id).filter((id: string) => !activeIds.includes(id));
+      if (orphaned.length > 0) {
+        await client.from('education').delete().in('id', orphaned);
+      }
+    }
+
     for (const edu of currentState.education) {
       const rowId = isValidUUID(edu.id) ? edu.id : generateUUID();
       edu.id = rowId;
@@ -814,6 +961,15 @@ export async function syncSkillsToSupabase() {
   if (!client) return;
 
   try {
+    const activeIds = currentState.skills.map((s) => s.id).filter(isValidUUID);
+    const { data: existing } = await client.from('skills').select('id');
+    if (existing && existing.length > 0) {
+      const orphaned = existing.map((r: any) => r.id).filter((id: string) => !activeIds.includes(id));
+      if (orphaned.length > 0) {
+        await client.from('skills').delete().in('id', orphaned);
+      }
+    }
+
     for (const s of currentState.skills) {
       const rowId = isValidUUID(s.id) ? s.id : generateUUID();
       s.id = rowId;
